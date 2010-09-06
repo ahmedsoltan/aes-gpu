@@ -57,6 +57,16 @@ Einführung und Grundlagen
 
 \begin_layout Subsection
 Aufgabenstellung
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+?
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -65,14 +75,44 @@ Grundlagen
 
 \begin_layout Subsubsection
 AES im Kurzüberblick
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Ibi
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
 CUDA Framework
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Krüger
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
 GPU Architektur
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Krüger
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -88,7 +128,17 @@ Implementierung
 \end_layout
 
 \begin_layout Subsection
-Referenzimplementierung im Detail
+Funktionen im Detail
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Ibi
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -105,10 +155,30 @@ Substitutionsbox
 
 \begin_layout Subsubsection
 ShiftRow-Funktion
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Ibi
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
 CUDA-spezifische Veränderungen
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Simon
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -121,6 +191,16 @@ Speichernutzung
 
 \begin_layout Section
 Tests und Benchmarks
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Vermutlich Simon
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -133,6 +213,16 @@ Ergebnisse
 
 \begin_layout Section
 Ausblick
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+?
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
