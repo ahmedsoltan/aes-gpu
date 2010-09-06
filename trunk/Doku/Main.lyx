@@ -1,4 +1,4 @@
-#LyX 1.6.5 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.6.1 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -96,9 +96,33 @@ status open
 Krüger
 \end_layout
 
-\end_inset
+\begin_layout Standard
+Das „Compute Unified Device Architecture Software Developer Kit“ (CUDA SDK)
+ wurde von NVIDA am 15.
+ Februar 2007 das erste mal der Öffentlichkeit vorgestellt.
+ Ziel dieses SDKs ist es, eine parallele Ausführung von Code auf unterstützten
+ Grafikkarten.
+ Zur Zeit sind das die aktuellen Grafikkarten, welche mit einem GeForce,
+ ION, Quadro oder Tesla Grafikprozessor ausgestattet sind.
+ 
+\end_layout
 
+\begin_layout Standard
+CUDA basiert auf eine abgewandelten Variante von C.
+ Typischerweise wird bei CUDA Anwendungen die Busbandweite und Latenz zwischen
+ CPU und GPU zum Engpass.
+ Darüber hinaus erreicht man die optimale Geschwindigkeit nur, wenn man
+ die Implementierung an die Hardware anpasst (z.B.
+ sollte die Anzahl der parallellaufenden Threads gleich die Anzahl der Streaming
+-Prozessoren sein).
+ 
+\end_layout
 
+\begin_layout Standard
+CUDA ist weitestgehend plattformunabhängig.
+ So ist es möglich, „CUDA-Programme“ auf Windows, Linux und Mac OSX auszuführen
+ - eine kompatible Grafikkarte vorausgesetzt.
+ 
 \end_layout
 
 \begin_layout Section
