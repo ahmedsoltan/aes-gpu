@@ -1,4 +1,4 @@
-﻿#LyX 1.6.6.1 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.6.1 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -143,11 +143,207 @@ Krüger
 \end_layout
 
 \begin_layout Subsection
-Überblick
+Historie
+\end_layout
+
+\begin_layout Standard
+Ursprünglich war es die einzige Aufgabe einer Grafikkarte, ein Bild auf
+ einem Anzeigegerät (wie z.B.
+ einem Monitor) darzustellen.
+ Im Laufe der Geschichte haben sie sich in programmierbare Prozessoren entwickel
+t.
+ Aufgrund ihrer Geschichte aus der Grafikberechnung, sind Grafikarten in
+ der Lage, sehr viele Operationen parallel zu berechnen.
+ Wie genau das von statten geht, wir im Kapitel der Architektur erwähnt.
+ Durch Ausnutzen der Parallelität der Grafikkarte in Berechnungen kann gegenüber
+ der Berechnung mit der CPU schneller berechnet werden.
 \end_layout
 
 \begin_layout Subsection
-Speicherhierarchie
+Architektur
+\end_layout
+
+\begin_layout Subsubsection
+Prozessoraufbau
+\end_layout
+
+\begin_layout Standard
+Moderne Grafikarten sind über die PCI-E Schnittstelle an die CPU angebunden.
+ Über diesen Bus werden die Daten und Prozesse an die berechnenden Einheiten
+ der GPU übertragen.
+\end_layout
+
+\begin_layout Standard
+Im Folgenden ist die Architektur der GPU abgebildet.
+ Hierbei ist zu beachten, dass die Anzahl der Multiprozessoren auf der GPU,
+ sowie die Anzahl der Streaming-Prozessoren (SP) je nach Modell unterschiedlich
+ sind.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename img/GPU-Architecture.png
+	width 16.5cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:GPU-Architecture-Overview"
+
+\end_inset
+
+GPU-Architecture
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Multithreaded Instruction Unit (MT IU)
+\end_layout
+
+\begin_layout Standard
+Die MT IU verwaltet die Ausführung von Threads auf dem Multiprocessor.
+ Hierbei werden einzelne Threads zu einem Block, mehrere Blöcke zu einem
+ Grid zusammengefasst.
+\end_layout
+
+\begin_layout Subsubsection
+Streaming Multiprocessor
+\end_layout
+
+\begin_layout Standard
+Auf jeden Streaming Multiprocessor wird genau ein Block abgebildet.
+ Die in dem Block befindlichen Threads werden -soweit möglich- parallel
+ abgearbeitet.
+ Hierbei hat jeder Thread in dem Block eine eindeutige ID, auf welche auch
+ in dem Thread zugegriffen werden kann.
+\end_layout
+
+\begin_layout Subsubsection
+Streaming Processor (SP)
+\end_layout
+
+\begin_layout Standard
+Jeder SP führt genau einen Tread aus.
+ 
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename img/GPU-Architecture_Grid_and_Blocks.png
+	width 16.5cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Streaming Processor
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Speicherhierarchie 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+UNBEDINGT auf Richtigkeit ueberpruefen!!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Global Memory 
+\end_layout
+
+\begin_layout Standard
+Der Global Memory (RAM) ist der Größte Bereich und sowohl von CPU als auch
+ von der GPU schreib- und lesbar.
+ Dieser Speicher ermöglicht den Austausch von Daten zwischen GPU und CPU.
+ Dieser Speicher hat die größte Kapazität, ist jedoch der langsamste der
+ Speicherhierarchie bezüglich der GPU.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Constant Memory
+\end_layout
+
+\begin_layout Standard
+Der Constant Memory ist physikalisch auf 64KB beschränkt.
+\end_layout
+
+\begin_layout Subsubsection
+Register
+\end_layout
+
+\begin_layout Standard
+Threads eines Bocks teilen sich gemeinsame Register.
+\end_layout
+
+\begin_layout Subsubsection*
+Shared Memory
+\end_layout
+
+\begin_layout Standard
+Für jeden Streaming-Multiprozessor-Prozessor ist ein Shared Memory vorgesehen,
+ welches der schnellste -mit 16 KB jedoch auch der kleinste- Speicher in
+ der Hierarchie der GPU ist.
+ Der Multiprozessor teilt diesen verfügbaren Speicher und seinen Streamingprozes
+soren auf.
+ Dieser Speicher kann nur von der GPU gelesen und geschrieben werden.
+ 
 \end_layout
 
 \begin_layout Section
