@@ -159,15 +159,21 @@ Das „Compute Unified Device Architecture Software Developer Kit“ (CUDA SDK)
 Die Architektur moderner GPUs ist aufgrund ihrer Geschichte als reine Berechnung
 seinheit für Bildschirmausgaben für den Zweck ausgelegt, Operationen parallel
  auszuführen.
- Diese Parallelität kann dazu genutzt werden, Algorithmen erheblich schneller
- auszuführen, sofern sie Teile enthält, deren Berechnungen unabhängig voneinande
-r durchgeführt werden können.
+ Als Co-Prozessor können GPUs somit Dank der CUDA-API dazu genutzt werden,
+ bestimmte Programmteile signifikat schneller abzuarbeiten.
 \end_layout
 
 \begin_layout Standard
-CUDA basiert auf einer angepassten Variante von C und ist damit weitestgehend
- plattformunabhängig.
- So ist es möglich, „CUDA-Programme“ unter Windows, Linux und Mac OS X auszuführ
+CUDA basiert auf einer optimierten Variante von C (
+\begin_inset Quotes eld
+\end_inset
+
+C for CUDA
+\begin_inset Quotes erd
+\end_inset
+
+) und ist damit weitestgehend plattformunabhängig.
+ So ist es möglich, CUDA-Anwendungen unter Windows, Linux und Mac OS X auszuführ
 en - eine kompatible Grafikkarte vorausgesetzt.
 \end_layout
 
