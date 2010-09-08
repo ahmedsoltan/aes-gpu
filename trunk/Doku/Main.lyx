@@ -1,4 +1,4 @@
-#LyX 1.6.6.1 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.5 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -69,37 +69,48 @@ Einführung und Grundlagen
 \end_layout
 
 \begin_layout Subsection
-Einleitung und Aufgabenstellung
+Einleitung
+\end_layout
+
+\begin_layout Standard
+Moderne Verschlüsselungsalgorithmen sind im Allgemeinen sehr rechenintensiv
+ und werden oft als Bestandteil des Betriebssystems ausgeführt.
+ Da gewöhnliche CPUs für diese Art von Operationen nicht ausgelegt sind,
+ wird das gesamte System durch die entstehende Auslastung gebremst.
+ Es liegt also nahe, eine geeignetere Plattform für die Berechnung von Verschlüs
+selungen zu nutzen.
+\end_layout
+
+\begin_layout Standard
+Im Rahmen dieses Praktikums wird daher evaluiert, inwiefern sich moderne
+ Grafikkarten bzw.
+ FPGAs zur optimierteren Ausführung nutzen lassen.
+ Die Verschlüsselungen sollen transparent in den Linux-Kernel eingebunden
+ und systemweit zur Verfügung gestellt werden.
+\end_layout
+
+\begin_layout Standard
+Im Folgenden wird mithilfe des CUDA-Frameworks von NVIDIA der AES-Algorithmus
+ auf einer GPU vom Typ 
+\begin_inset Quotes eld
+\end_inset
+
+GTX8800
+\begin_inset Quotes erd
+\end_inset
+
+ aus dem Hause NVIDIA 
 \begin_inset Note Note
 status open
 
 \begin_layout Plain Layout
-?
+ÜBERPRÜFEN!
 \end_layout
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
-Im Laufe des Studiums erfährt jeder Student der Informatik Grundlagen der
- Programmiertechnik.
- In dem Praktikum -welches dieser Dokumentation zu Grunde liegt- wurden
- die Grundlagen in der Praxis an einem nicht trivialem Projekt angewandt.
-\end_layout
-
-\begin_layout Standard
-Dieses Projekt beschäftigt sich mit der Beschleunigung von Reed-Solomon-Codes
- (RS-Codes) auf einer GPU und einem FPGA.
- Um den Umfang der Implementierungen übersichtlicher zu halten, haben sich
- alle Gruppen auf AES als RS-Code verständigt.
-\end_layout
-
-\begin_layout Standard
-Diese Dokumentation befasst sich mit der Beschleunigung von AES auf einer
- GPU.
- 
+ implementiert und durch eine Reihe von Tests auf eine eventuelle Verbesserung
+ der Datendurchsatzrate hin überprüft.
 \end_layout
 
 \begin_layout Subsection
@@ -108,16 +119,6 @@ Grundlagen
 
 \begin_layout Subsubsection
 AES im Kurzüberblick
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Ibi
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
