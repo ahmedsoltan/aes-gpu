@@ -1,4 +1,4 @@
-#LyX 1.6.5 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.7 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -407,17 +407,665 @@ AES-Implementierung
 Algorithmus im Detail
 \end_layout
 
+\begin_layout Standard
+Jeder Block wird zunächst in eine zweidimensionale Tabelle mit vier Zeilen
+ und 4 Spalten geschrieben, deren Zellen ein Byte groß sind.
+ Jeder Block wird nun nacheinander bestimmten Transformationen unterzogen.
+ Anstatt jeden Block einmal mit dem Schlüssel zu verschlüsseln, wendet Rijndael
+ verschiedene Teile des erweiterten Originalschlüssels nacheinander auf
+ den Klartext-Block an.
+ Die Anzahl r dieser Runden variiert und ist von der Schlüssellänge k abhängig:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="2">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Schlüsellänge k
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Runden
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+128
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+10
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+192
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+12
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+256
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+14
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Der Ablauf einer AES-Verschlüsselung ist wie folgt aufgebaut:
+\end_layout
+
+\begin_layout Itemize
+Schlüsselexpansion
+\end_layout
+
+\begin_layout Itemize
+Vorrunde
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+KeyAddition (Rundenschlüssel[0])
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Verschlüsselungsrunden (runde < R)
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Substitution
+\end_layout
+
+\begin_layout Itemize
+ShiftRow
+\end_layout
+
+\begin_layout Itemize
+MixColumn
+\end_layout
+
+\begin_layout Itemize
+KeyAddition (Rundenschlüssel[runde])
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Schlussrunde
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Substitution
+\end_layout
+
+\begin_layout Itemize
+ShiftRow
+\end_layout
+
+\begin_layout Itemize
+KeyAddition (Rundenschlüssel[R]) 
+\end_layout
+
+\end_deeper
 \begin_layout Subsubsection
-MixColumn-Funktion bla bla etc.
- pp.
+Schlüsselexpansion
+\end_layout
+
+\begin_layout Standard
+Der Benutzerschlüssel wird in r+1 Teilschlüssel aufgeteilt, die sogenannten
+ Rundenschlüssel.
+ Diese müssen dieselbe Länge wie die Blöcke haben, was bedeutet, dass der
+ Benutzerschlüssel zunächst auf die Länge 128*(r+1) expandiert werden muss.
+ Aus diesem werden die Rundenschlüssel erzeugt und ebenfalls in Tabellen
+ mit 4 Spalten und 4 Zeilen gespeichert.
+ Für die Erzeugung der ersten Spalte des jeweils nächsten Rundenschlüssels
+ wird zunächst die letzte Spalte des vorherigen Schlüssels, am Anfang also
+ des Benutzerschlüssels, genommen und um eine Zeile nach oben rotiert.
+ Die oberste Zelle wird unten wieder eingefügt.
+ Nun erfolgt eine Substitution der vier Werte mit Hilfe der Substitutionsbox.
+ Sie ist meist als Array aufgebaut und gibt an, wie jedes Byte durch einen
+ anderen Wert zu ersetzen ist.
+ Die Konstruktion der S-Box unterliegt Designkriterien, die die Anfälligkeit
+ für die Methoden der linearen und der differentiellen Kryptoanalyse sowie
+ für algebraische Attacken minimieren sollen.
+ Mit Hilfe der S-Box wird jedes Byte des Blocks durch ein Äquivalent ersetzt
+ und die Daten somit monoalphabetisch verschlüsselt.
+ Diese neuerzeugte Spalte wird mit der drei Spalten zurückliegenden Spalte
+ und mit der ersten Spalte der sogenannten Rcon-Tabelle XOR-verknüpft.
+ Die Rcon-Tabelle ist ebenfalls in Form eines Arrays mit 4 Zeilen und einer
+ Spalte für jeden Rundenschlüssel aufgebaut.
+ Sie enthält konstante Werte die auf einem mathematischen System beruhen.
+ Die aus der XOR-Verknüpfung erzeugten Werte ergeben die erste Spalte des
+ nächsten Rundenschlüssels.
+ Die restlichen drei Spalten ergeben sich jeweils aus einer XOR-Verknüpfung
+ der davor liegenden und der zu dieser drei zurückliegenden Spalte.
+ Für alle folgenden Rundenschlüssel läuft die Berechnung analog ab.
+ Abbildung 3 veranschaulicht dieses Vorgehen.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Berechnung der Rundenschlüssel
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
-Blubb...
+Vorrunde
+\end_layout
+
+\begin_layout Standard
+Bei der KeyAddition erfolgt eine XOR-Verknüpfung zwischen dem zu verschlüsselnde
+n Block und dem ersten Rundenschlüssel (siehe Abb.4).
+ Nur an dieser Stelle ist der Algorithmus vom Benutzerschlüssel abhängig.
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+KeyAddition
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
-...
+Verschlüsselungsrunden
+\end_layout
+
+\begin_layout Standard
+In den folgenden Verschlüsselungsrunden wird zunächst eine Substitution
+ durchgeführt.
+ 
+\end_layout
+
+\begin_layout Standard
+Dazu wird die Substitutionsbox verwendet.
+ Im darauffolgenden Schritt, genannt ShiftRow, werden die Zeilen um eine
+ bestimmte Anzahl von Spalten nach links verschoben und links hinausgeschobene
+ Zellen rechts wieder angefügt.
+ Die erste Zeile bleibt konstant, die zweite wird um eine, die dritte um
+ zwei und die vierte um drei Spalten verschoben.
+ Abbildung 5 veranschaulicht dieses Vorgehen.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+ShiftRow
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Im MixColumn-Schritt wird zunächst jede Zelle mit einer Konstanten multipliziert
+ und dann die Spalten mit den Ergebnissen der Multiplikation XOR verknüpft
+ (Abb.
+ 6).
+ Die Konstanten, bei denen es sich um Hexadezimalwerte handelt, werden auf
+ folgende Weise auf die Zellen verteilt:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="5">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Spalte 1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Spalte 2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Spalte 3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Spalte 4
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Zeile 1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+02
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+03
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+01
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+01
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Zeile 2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+01
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+02
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+03
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+01
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Zeile 3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+01
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+01
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+02
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+03
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Zeile 4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+03
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+01
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+01
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+02
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Konstanten
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+MixColumn
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Nun folgt zum Abschluss jeder Verschlüsselungsrunde noch ein Mal die KeyAddition.
+ Abgeschlossen wird die Verschlüsselung mit der Schlussrunde, in der noch
+ ein Mal die Schritte Substitution, ShiftRow und KeyAddition angewendet
+ werden.
+\end_layout
+
+\begin_layout Standard
+Die Schlussrunde verläuft identisch zu den übrigen Verschlüsselungsrunden
+ mit der Außnahme, dass keine MixColumn-Funktion ausgeführt wird.
+\end_layout
+
+\begin_layout Subsubsection
+Entschlüsselung
+\end_layout
+
+\begin_layout Standard
+Bei der Entschlüsselung von Daten wird genau rückwärts vorgegangen.
+ Die Daten werden zunächst wieder in zweidimensionale Tabellen gelesen und
+ die Rundenschlüssel generiert.
+ Allerdings wird nun mit der Schlussrunde angefangen und alle Funktionen
+ in jeder Runde in der umgekehrten Reihenfolge aufgerufen.
+ Durch die vielen XOR-Verknüpfungen unterscheiden sich die meisten Funktionen
+ zum Entschlüsseln nicht von denen zum Verschlüsseln.
+ Jedoch muss eine andere S-Box genutzt werden (die sich aus der originalen
+ S-Box berechnen lässt) und die Zeilenverschiebungen erfolgen in die andere
+ Richtung.
 \end_layout
 
 \begin_layout Subsection
