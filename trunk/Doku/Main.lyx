@@ -400,47 +400,24 @@ soren auf.
 \end_layout
 
 \begin_layout Section
-Implementierung
+AES-Implementierung
 \end_layout
 
 \begin_layout Subsection
-Funktionen im Detail
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Ibi
-\end_layout
-
-\end_inset
-
-
+Algorithmus im Detail
 \end_layout
 
 \begin_layout Subsubsection
-Galois-Feld-Theorie etc.
+MixColumn-Funktion bla bla etc.
+ pp.
 \end_layout
 
 \begin_layout Subsubsection
-MixColumn-Funktion
+Blubb...
 \end_layout
 
 \begin_layout Subsubsection
-Substitutionsbox
-\end_layout
-
-\begin_layout Subsubsection
-ShiftRow-Funktion
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Ibi
-\end_layout
-
-\end_inset
-
-
+...
 \end_layout
 
 \begin_layout Subsection
