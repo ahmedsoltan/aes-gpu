@@ -192,23 +192,6 @@ Krüger
 \end_layout
 
 \begin_layout Subsection
-Historie
-\end_layout
-
-\begin_layout Standard
-Ursprünglich war es die einzige Aufgabe einer Grafikkarte, ein Bild auf
- einem Anzeigegerät (wie z.B.
- einem Monitor) darzustellen.
- Im Laufe der Geschichte haben sie sich in programmierbare Prozessoren entwickel
-t.
- Aufgrund ihrer Geschichte aus der Grafikberechnung, sind Grafikarten in
- der Lage, sehr viele Operationen parallel zu berechnen.
- Wie genau das von statten geht, wir im Kapitel der Architektur erwähnt.
- Durch Ausnutzen der Parallelität der Grafikkarte in Berechnungen kann gegenüber
- der Berechnung mit der CPU schneller berechnet werden.
-\end_layout
-
-\begin_layout Subsection
 Architektur
 \end_layout
 
