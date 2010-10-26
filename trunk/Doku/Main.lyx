@@ -146,16 +146,6 @@ den wird.
 
 \begin_layout Subsubsection
 CUDA Framework
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Krüger
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -190,16 +180,6 @@ en - eine kompatible Grafikkarte vorausgesetzt.
 
 \begin_layout Section
 GPU Architektur
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Krüger
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Subsection
@@ -1059,17 +1039,42 @@ Bei der Entschlüsselung von Daten wird genau rückwärts vorgegangen.
 \end_layout
 
 \begin_layout Subsection
-CUDA-spezifische Veränderungen
+C++ Implementierung
+\end_layout
+
+\begin_layout Standard
+Ausgangspunkt der weiteren Bearbeitung ist eine unfertige C++ Implementierung
+ des Algorithmus von Paulo S.
+ L.
+ M.
+ Barreto
 \begin_inset Note Note
 status open
 
 \begin_layout Plain Layout
-Simon
+Verweis!!!
 \end_layout
 
 \end_inset
 
+.
+ Der Autor hat bereits erste Ansätze zur Datenverschlüsselung auf einer
+ GPU programmiert, hat das Projekt jedoch aus unbekannten Gründen eingestellt,
+ sodass noch einige Ergänzungen und Änderungen vorgenommen werden müssen.
+\end_layout
 
+\begin_layout Standard
+Die Implementierung ist Dank der Ausnutzung komplexerer Galois-Feld-Operationen
+ vergleichsweise schnell.
+ Hierbei werden die Berechnungen durch Nutzung vorkalkulierter Tabellen
+ auf Kosten der Speichereffizienz beschleunigt.
+ Der Aufwand der Verschlüsselung verringert sich somit auf eine Reihe (schneller
+) Binäroperationen, welche sich auf der GPU vorteilhaft parallel ausführen
+ lassen können.
+\end_layout
+
+\begin_layout Subsection
+CUDA-spezifische Veränderungen
 \end_layout
 
 \begin_layout Subsubsection
@@ -1082,16 +1087,6 @@ Speichernutzung
 
 \begin_layout Section
 Tests und Benchmarks
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Vermutlich Simon
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Subsection
