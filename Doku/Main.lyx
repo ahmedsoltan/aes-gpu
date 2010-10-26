@@ -1,4 +1,4 @@
-#LyX 1.6.7 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.5 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -379,7 +379,7 @@ Algorithmus im Detail
 
 \begin_layout Standard
 Im diesem Kapitel wird der Ablauf des AES Algorithmus vorgestellt.
- Er besteht aus mehreren Phasen, auf die im Folgenden genauer eingegeangen
+ Er besteht aus mehreren Phasen, auf die im Folgenden genauer eingegangen
  wird.
 \end_layout
 
@@ -394,6 +394,15 @@ Jeder Block wird zunächst in eine zweidimensionale Tabelle mit vier Zeilen
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
 \begin_inset Tabular
 <lyxtabular version="3" rows="4" columns="2">
 <features>
@@ -404,7 +413,7 @@ Jeder Block wird zunächst in eine zweidimensionale Tabelle mit vier Zeilen
 \begin_inset Text
 
 \begin_layout Plain Layout
-Schlüsellänge k
+Schlüssellänge k
 \end_layout
 
 \end_inset
@@ -413,7 +422,7 @@ Schlüsellänge k
 \begin_inset Text
 
 \begin_layout Plain Layout
-Runden
+Runden r
 \end_layout
 
 \end_inset
@@ -484,14 +493,28 @@ Runden
 \end_inset
 
 
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Rundenlängen
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-Der Ablauf einer AES-Verschlüsselung ist wie folgt aufgebaut:
+Der Ablauf jeder einzelnen Block-Verschlüsselung entspricht folgendem Schema:
 \end_layout
 
 \begin_layout Itemize
-Schlüsselexpansion
+Schlüsselexpansion (entfällt bei ECB-Modus)
 \end_layout
 
 \begin_layout Itemize
@@ -500,7 +523,7 @@ Vorrunde
 
 \begin_deeper
 \begin_layout Itemize
-KeyAddition (Rundenschlüssel[0])
+AddRoundKey (Rundenschlüssel[0])
 \end_layout
 
 \end_deeper
@@ -522,7 +545,7 @@ MixColumn
 \end_layout
 
 \begin_layout Itemize
-KeyAddition (Rundenschlüssel[runde])
+AddRoundKey (Rundenschlüssel[runde])
 \end_layout
 
 \end_deeper
@@ -540,7 +563,7 @@ ShiftRow
 \end_layout
 
 \begin_layout Itemize
-KeyAddition (Rundenschlüssel[R]) 
+AddRoundKey (Rundenschlüssel[R]) 
 \end_layout
 
 \end_deeper
@@ -595,10 +618,6 @@ sideways false
 status open
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
 \begin_inset Caption
 
 \begin_layout Plain Layout
@@ -624,19 +643,35 @@ Vorrunde
 \end_layout
 
 \begin_layout Standard
-Bei der KeyAddition erfolgt eine XOR-Verknüpfung zwischen dem zu verschlüsselnde
-n Block und dem ersten Rundenschlüssel (siehe Abb.4).
+Bei AddRoundKey erfolgt eine XOR-Verknüpfung zwischen dem zu verschlüsselnden
+ Block und dem ersten Rundenschlüssel (siehe Abb.4).
  Nur an dieser Stelle ist der Algorithmus vom Benutzerschlüssel abhängig.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
+placement H
 wide false
 sideways false
 status open
 
 \begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename img/addroundkey.eps
+	width 60page%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
 \begin_inset Caption
 
 \begin_layout Plain Layout
-KeyAddition
+AddRoundKey
 \end_layout
 
 \end_inset
@@ -676,11 +711,20 @@ Dazu wird die Substitutionsbox verwendet.
 
 \begin_layout Standard
 \begin_inset Float figure
+placement H
 wide false
 sideways false
 status open
 
 \begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename img/shiftrow.eps
+	width 60page%
+
+\end_inset
+
 
 \end_layout
 
@@ -696,10 +740,6 @@ ShiftRow
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
@@ -707,298 +747,27 @@ ShiftRow
 
 \begin_layout Standard
 Im MixColumn-Schritt wird zunächst jede Zelle mit einer Konstanten multipliziert
- und dann die Spalten mit den Ergebnissen der Multiplikation XOR verknüpft
- (Abb.
- 6).
- Die Konstanten, bei denen es sich um Hexadezimalwerte handelt, werden auf
- folgende Weise auf die Zellen verteilt:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float table
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\begin_inset Tabular
-<lyxtabular version="3" rows="5" columns="5">
-<features>
-<column alignment="center" valignment="top" width="0">
-<column alignment="center" valignment="top" width="0">
-<column alignment="center" valignment="top" width="0">
-<column alignment="center" valignment="top" width="0">
-<column alignment="center" valignment="top" width="0">
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Spalte 1
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Spalte 2
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Spalte 3
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Spalte 4
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Zeile 1
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-02
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-03
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-01
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-01
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Zeile 2
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-01
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-02
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-03
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-01
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Zeile 3
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-01
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-01
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-02
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-03
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Zeile 4
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-03
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-01
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-01
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-02
-\end_layout
-
-\end_inset
-</cell>
-</row>
-</lyxtabular>
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption
-
-\begin_layout Plain Layout
-Konstanten
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
+ und dann die Spalten mit den Ergebnissen der Multiplikation XOR verknüpft.
+ Durch eine geschickte Analyse dieser Operation, vereinfacht sich die Rechnung
+ zu einer simplen Matrixmultiplikation.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float figure
+placement H
 wide false
 sideways false
 status open
 
 \begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename img/mixcolumn.eps
+	width 60page%
+
+\end_inset
+
 
 \end_layout
 
@@ -1024,9 +793,9 @@ MixColumn
 \end_layout
 
 \begin_layout Standard
-Nun folgt zum Abschluss jeder Verschlüsselungsrunde noch ein Mal die KeyAddition.
+Nun folgt zum Abschluss jeder Verschlüsselungsrunde noch ein Mal AddRoundKey.
  Abgeschlossen wird die Verschlüsselung mit der Schlussrunde, in der noch
- ein Mal die Schritte Substitution, ShiftRow und KeyAddition angewendet
+ ein Mal die Schritte Substitution, ShiftRow und AddRoundKey angewendet
  werden.
 \end_layout
 
@@ -1085,6 +854,20 @@ Die Implementierung ist Dank der Ausnutzung komplexerer Galois-Feld-Operationen
  Der Aufwand der Verschlüsselung verringert sich somit auf eine Reihe (schneller
 ) Binäroperationen, welche sich auf der GPU vorteilhaft parallel ausführen
  lassen können.
+\end_layout
+
+\begin_layout Standard
+Zusätzlich ist anzumerken, dass zugunsten der Parallelität der sogenannte
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Electronic Code Book Mode
+\begin_inset Quotes erd
+\end_inset
+
+ (ECB) verwendet wird, also jeder Block mit dem gleichen expandierten Schlüssel
+ chiffriert wird.
 \end_layout
 
 \begin_layout Subsection
