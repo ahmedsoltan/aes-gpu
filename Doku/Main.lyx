@@ -1,4 +1,4 @@
-#LyX 1.6.7 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.5 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -95,22 +95,12 @@ Im Folgenden wird mithilfe des CUDA-Frameworks von NVIDIA der AES-Algorithmus
 \begin_inset Quotes eld
 \end_inset
 
-GTX8800
+GTX 8800
 \begin_inset Quotes erd
 \end_inset
 
- aus dem Hause NVIDIA 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ÜBERPRÜFEN!
-\end_layout
-
-\end_inset
-
- implementiert und durch eine Reihe von Tests auf eine eventuelle Verbesserung
- der Datendurchsatzrate hin überprüft.
+ aus dem Hause NVIDIA implementiert und durch eine Reihe von Tests auf eine
+ eventuelle Verbesserung der Datendurchsatzrate hin überprüft.
 \end_layout
 
 \begin_layout Subsection
