@@ -1,4 +1,4 @@
-#LyX 1.6.5 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.7 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -378,6 +378,12 @@ Algorithmus im Detail
 \end_layout
 
 \begin_layout Standard
+Im diesem Kapitel wird der Ablauf des AES Algorithmus vorgestellt.
+ Er besteht aus mehreren Phasen, auf die im Folgenden genauer eingegeangen
+ wird.
+\end_layout
+
+\begin_layout Standard
 Jeder Block wird zunächst in eine zweidimensionale Tabelle mit vier Zeilen
  und 4 Spalten geschrieben, deren Zellen ein Byte groß sind.
  Jeder Block wird nun nacheinander bestimmten Transformationen unterzogen.
@@ -556,14 +562,22 @@ Der Benutzerschlüssel wird in r+1 Teilschlüssel aufgeteilt, die sogenannten
  Nun erfolgt eine Substitution der vier Werte mit Hilfe der Substitutionsbox.
  Sie ist meist als Array aufgebaut und gibt an, wie jedes Byte durch einen
  anderen Wert zu ersetzen ist.
- Die Konstruktion der S-Box unterliegt Designkriterien, die die Anfälligkeit
+ 
+\end_layout
+
+\begin_layout Standard
+Die Konstruktion der S-Box unterliegt Designkriterien, die die Anfälligkeit
  für die Methoden der linearen und der differentiellen Kryptoanalyse sowie
  für algebraische Attacken minimieren sollen.
  Mit Hilfe der S-Box wird jedes Byte des Blocks durch ein Äquivalent ersetzt
  und die Daten somit monoalphabetisch verschlüsselt.
  Diese neuerzeugte Spalte wird mit der drei Spalten zurückliegenden Spalte
  und mit der ersten Spalte der sogenannten Rcon-Tabelle XOR-verknüpft.
- Die Rcon-Tabelle ist ebenfalls in Form eines Arrays mit 4 Zeilen und einer
+ 
+\end_layout
+
+\begin_layout Standard
+Die Rcon-Tabelle ist ebenfalls in Form eines Arrays mit 4 Zeilen und einer
  Spalte für jeden Rundenschlüssel aufgebaut.
  Sie enthält konstante Werte die auf einem mathematischen System beruhen.
  Die aus der XOR-Verknüpfung erzeugten Werte ergeben die erste Spalte des
