@@ -405,11 +405,13 @@ Algorithmus im Detail
 Im diesem Kapitel wird der Ablauf des AES Algorithmus vorgestellt.
  Er besteht aus mehreren Phasen, auf die im Folgenden genauer eingegangen
  wird.
+ Anzumerken sei, dass bei Beispielen der Einfachheit halber von einer 128
+ Bit-Verschlüsselung ausgegangen wird.
 \end_layout
 
 \begin_layout Standard
 Jeder Block wird zunächst in eine zweidimensionale Tabelle mit vier Zeilen
- und 4 Spalten geschrieben, deren Zellen ein Byte groß sind.
+ und vier Spalten geschrieben, deren Zellen ein Byte groß sind.
  Jeder Block wird nun nacheinander bestimmten Transformationen unterzogen.
  Anstatt jeden Block einmal mit dem Schlüssel zu verschlüsseln, wendet AES
  verschiedene Teile des erweiterten Originalschlüssels nacheinander auf
@@ -539,7 +541,6 @@ Der Ablauf jeder einzelnen Block-Verschlüsselung entspricht folgendem Schema:
 
 \begin_layout Standard
 \begin_inset Float figure
-placement h
 wide false
 sideways false
 status open
@@ -557,8 +558,6 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\noindent
-\align center
 \begin_inset Caption
 
 \begin_layout Plain Layout
@@ -584,17 +583,23 @@ Schlüsselexpansion
 \end_layout
 
 \begin_layout Standard
-Der Benutzerschlüssel wird in r+1 Teilschlüssel aufgeteilt, die sogenannten
- Rundenschlüssel.
+Vor der ersten Chiffrierung muss zunächst einmal der Schlüssel entsprechend
+ aufbereitet werden.
+\end_layout
+
+\begin_layout Standard
+Der Benutzerschlüssel muss in r+1 Teilschlüssel aufgeteilt werden, die sogenannt
+en Rundenschlüssel.
  Diese müssen dieselbe Länge wie die Blöcke haben, was bedeutet, dass der
- Benutzerschlüssel zunächst auf die Länge 128*(r+1) expandiert werden muss.
+ Benutzerschlüssel zunächst auf die Länge k*(r+1) expandiert werden muss.
  Aus diesem werden die Rundenschlüssel erzeugt und ebenfalls in Tabellen
- mit 4 Spalten und 4 Zeilen gespeichert.
+ (Arrays) mit vier Spalten und vier Zeilen gespeichert.
  Für die Erzeugung der ersten Spalte des jeweils nächsten Rundenschlüssels
  wird zunächst die letzte Spalte des vorherigen Schlüssels, am Anfang also
  des Benutzerschlüssels, genommen und um eine Zeile nach oben rotiert.
  Die oberste Zelle wird unten wieder eingefügt.
- Nun erfolgt eine Substitution der vier Werte mit Hilfe der Substitutionsbox.
+ Nun erfolgt eine Substitution der vier Werte mit Hilfe der sogenannten
+ Substitutionsbox.
  Sie ist meist als Array aufgebaut und gibt an, wie jedes Byte durch einen
  anderen Wert zu ersetzen ist.
  
@@ -628,6 +633,10 @@ Die Rcon-Tabelle ist ebenfalls in Form eines Arrays mit 4 Zeilen und einer
 wide false
 sideways false
 status open
+
+\begin_layout Plain Layout
+
+\end_layout
 
 \begin_layout Plain Layout
 \begin_inset Caption
@@ -702,13 +711,12 @@ Verschlüsselungsrunden
 
 \begin_layout Standard
 In den folgenden Verschlüsselungsrunden wird zunächst eine Substitution
- durchgeführt.
+ mittels der erwähnten S-Box durchgeführt.
  
 \end_layout
 
 \begin_layout Standard
-Dazu wird die Substitutionsbox verwendet.
- Im darauffolgenden Schritt, genannt ShiftRow, werden die Zeilen um eine
+Im darauffolgenden Schritt, genannt ShiftRow, werden die Zeilen um eine
  bestimmte Anzahl von Spalten nach links verschoben und links hinausgeschobene
  Zellen rechts wieder angefügt.
  Die erste Zeile bleibt konstant, die zweite wird um eine, die dritte um
