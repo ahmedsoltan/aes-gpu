@@ -1,4 +1,4 @@
-#LyX 1.6.5 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.7 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -50,6 +50,33 @@
 \end_header
 
 \begin_body
+
+\begin_layout Title
+Beschleunigung von AES-Verschlüsselungen unter Zuhilfenahme einer GPU
+\end_layout
+
+\begin_layout Author
+Simon Waloschek, Benedikt Krüger, Ibrahim Alptekin, Daniel Nickchen
+\end_layout
+
+\begin_layout Subject
+Projektarbeit des Studienganges 
+\begin_inset Quotes eld
+\end_inset
+
+Ingenieurinformatik
+\begin_inset Quotes erd
+\end_inset
+
+ im Rahmen des Softwarepraktikums
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
 
 \begin_layout Standard
 \begin_inset CommandInset toc
@@ -174,33 +201,22 @@ C for CUDA
 \end_inset
 
 ) und ist damit weitestgehend plattformunabhängig.
- So ist es möglich, CUDA-Anwendungen unter Windows, Linux und Mac OS X auszuführ
-en - eine kompatible Grafikkarte vorausgesetzt.
+ So ist es möglich, entsprechend programmierte CUDA-Anwendungen unter Windows,
+ Linux und Mac OS auszuführen - eine kompatible Grafikkarte vorausgesetzt.
 \end_layout
 
 \begin_layout Section
 GPU Architektur
 \end_layout
 
-\begin_layout Subsection
-Architektur
-\end_layout
-
-\begin_layout Subsubsection
-Prozessoraufbau
-\end_layout
-
 \begin_layout Standard
-Moderne Grafikarten sind über die PCI-E Schnittstelle an die CPU angebunden.
- Über diesen Bus werden die Daten und Prozesse an die berechnenden Einheiten
- der GPU übertragen.
-\end_layout
-
-\begin_layout Standard
-Im Folgenden ist die Architektur der GPU abgebildet.
- Hierbei ist zu beachten, dass die Anzahl der Multiprozessoren auf der GPU,
- sowie die Anzahl der Streaming-Prozessoren (SP) je nach Modell unterschiedlich
- sind.
+Zum besseren Verständnis der AES-Implementierung, ist ein Überblick über
+ die Speicher- und Prozessverwaltungsarchitektur von Nöten.
+ Die nachfolgenden Erläuterung beziehen sich zwar speziell auf die verwendete
+ Grafikkarte, sind jedoch in großen Teilen auf verwandte Modelle übertragbar.
+ Hierbei ist besonders zu beachten, dass die Anzahl der Multiprozessoren
+ auf der GPU, sowie die Anzahl der Streaming-Prozessoren (SP) je nach Modell
+ unterschiedlich sind.
  
 \end_layout
 
@@ -211,6 +227,8 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\noindent
+\align center
 \begin_inset Graphics
 	filename img/GPU-Architecture.png
 	width 16.5cm
@@ -230,7 +248,7 @@ name "fig:GPU-Architecture-Overview"
 
 \end_inset
 
-GPU-Architecture
+GPU-Architektur
 \end_layout
 
 \end_inset
@@ -238,7 +256,42 @@ GPU-Architecture
 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Prozessverwaltung
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
 \begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename img/GPU-Architecture_Grid_and_Blocks.png
+	width 16.5cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Streaming Processor
+\end_layout
+
+\end_inset
+
 
 \end_layout
 
@@ -275,41 +328,6 @@ Streaming Processor (SP)
 
 \begin_layout Standard
 Jeder SP führt genau einen Tread aus.
- 
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\begin_inset Graphics
-	filename img/GPU-Architecture_Grid_and_Blocks.png
-	width 16.5cm
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption
-
-\begin_layout Plain Layout
-Streaming Processor
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Subsection
@@ -318,12 +336,18 @@ Speicherhierarchie
 status open
 
 \begin_layout Plain Layout
-UNBEDINGT auf Richtigkeit ueberpruefen!!
+UNBEDINGT auf Richtigkeit ueberpruefen!! GRAFIK FEHLT!
 \end_layout
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Moderne Grafikarten sind über die PCI-E Schnittstelle an die CPU angebunden.
+ Über diesen Bus werden die Daten und Prozesse an die berechnenden Einheiten
+ der GPU übertragen.
 \end_layout
 
 \begin_layout Subsubsection
@@ -387,7 +411,7 @@ Im diesem Kapitel wird der Ablauf des AES Algorithmus vorgestellt.
 Jeder Block wird zunächst in eine zweidimensionale Tabelle mit vier Zeilen
  und 4 Spalten geschrieben, deren Zellen ein Byte groß sind.
  Jeder Block wird nun nacheinander bestimmten Transformationen unterzogen.
- Anstatt jeden Block einmal mit dem Schlüssel zu verschlüsseln, wendet Rijndael
+ Anstatt jeden Block einmal mit dem Schlüssel zu verschlüsseln, wendet AES
  verschiedene Teile des erweiterten Originalschlüssels nacheinander auf
  den Klartext-Block an.
  Die Anzahl r dieser Runden variiert und ist von der Schlüssellänge k abhängig:
@@ -513,60 +537,48 @@ Rundenlängen
 Der Ablauf jeder einzelnen Block-Verschlüsselung entspricht folgendem Schema:
 \end_layout
 
-\begin_layout Itemize
-Schlüsselexpansion (entfällt bei ECB-Modus)
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename img/EncryptionProcess.eps
+	height 10cm
+
+\end_inset
+
+
 \end_layout
 
-\begin_layout Itemize
-Vorrunde
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Ablaufschema
 \end_layout
 
-\begin_deeper
-\begin_layout Itemize
-AddRoundKey (Rundenschlüssel[0])
+\end_inset
+
+
 \end_layout
 
-\end_deeper
-\begin_layout Itemize
-Verschlüsselungsrunden (runde < R)
+\begin_layout Plain Layout
+
 \end_layout
 
-\begin_deeper
-\begin_layout Itemize
-Substitution
+\end_inset
+
+
 \end_layout
 
-\begin_layout Itemize
-ShiftRow
-\end_layout
-
-\begin_layout Itemize
-MixColumn
-\end_layout
-
-\begin_layout Itemize
-AddRoundKey (Rundenschlüssel[runde])
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Schlussrunde
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Substitution
-\end_layout
-
-\begin_layout Itemize
-ShiftRow
-\end_layout
-
-\begin_layout Itemize
-AddRoundKey (Rundenschlüssel[R]) 
-\end_layout
-
-\end_deeper
 \begin_layout Subsubsection
 Schlüsselexpansion
 \end_layout
@@ -626,10 +638,6 @@ Berechnung der Rundenschlüssel
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -749,7 +757,7 @@ ShiftRow
 Im MixColumn-Schritt wird zunächst jede Zelle mit einer Konstanten multipliziert
  und dann die Spalten mit den Ergebnissen der Multiplikation XOR verknüpft.
  Durch eine geschickte Analyse dieser Operation, vereinfacht sich die Rechnung
- zu einer simplen Matrixmultiplikation.
+ zu einer simplen Matrizenmultiplikation.
 \end_layout
 
 \begin_layout Standard
@@ -793,15 +801,10 @@ MixColumn
 \end_layout
 
 \begin_layout Standard
-Nun folgt zum Abschluss jeder Verschlüsselungsrunde noch ein Mal AddRoundKey.
- Abgeschlossen wird die Verschlüsselung mit der Schlussrunde, in der noch
- ein Mal die Schritte Substitution, ShiftRow und AddRoundKey angewendet
- werden.
-\end_layout
-
-\begin_layout Standard
-Die Schlussrunde verläuft identisch zu den übrigen Verschlüsselungsrunden
- mit der Außnahme, dass keine MixColumn-Funktion ausgeführt wird.
+Zum Ende jeder Verschlüsselungsrunde wird noch einmal AddRoundKey ausgeführt.
+ Abgeschlossen wird die Verschlüsselung mit der Schlussrunde, sie verläuft
+ identisch zu den übrigen Verschlüsselungsrunden mit dem Unterschied, dass
+ keine MixColumn-Funktion ausgeführt wird.
 \end_layout
 
 \begin_layout Subsubsection
@@ -809,13 +812,13 @@ Entschlüsselung
 \end_layout
 
 \begin_layout Standard
-Bei der Entschlüsselung von Daten wird genau rückwärts vorgegangen.
+Bei der Entschlüsselung von Daten wird entsprechend rückwärts vorgegangen.
  Die Daten werden zunächst wieder in zweidimensionale Tabellen gelesen und
  die Rundenschlüssel generiert.
  Allerdings wird nun mit der Schlussrunde angefangen und alle Funktionen
  in jeder Runde in der umgekehrten Reihenfolge aufgerufen.
- Durch die vielen XOR-Verknüpfungen unterscheiden sich die meisten Funktionen
- zum Entschlüsseln nicht von denen zum Verschlüsseln.
+ Durch die vielen (symmetrischen) XOR-Verknüpfungen unterscheiden sich die
+ meisten Funktionen zum Entschlüsseln nicht von denen zum Verschlüsseln.
  Jedoch muss eine andere S-Box genutzt werden (die sich aus der originalen
  S-Box berechnen lässt) und die Zeilenverschiebungen erfolgen in die andere
  Richtung.
@@ -870,6 +873,64 @@ Electronic Code Book Mode
  chiffriert wird.
 \end_layout
 
+\begin_layout Subsubsection
+Schnittstelle zur Außenwelt
+\end_layout
+
+\begin_layout Standard
+Um von außen auf die Verschlüsselungsfunktionen zugreifen zu können, enthält
+ die genutzte AES-Klasse neben dem Konstruktur 
+\begin_inset Quotes eld
+\end_inset
+
+öffentliche
+\begin_inset Quotes erd
+\end_inset
+
+ Funktionen für die Schlüsselexpansionen sowie für die Ver- bzw.
+ Entschlüsselung.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename img/class.eps
+	width 7cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Klassendiagramm mit public Funktionen
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 CUDA-spezifische Veränderungen
 \end_layout
@@ -905,10 +966,6 @@ status open
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
 
 \end_layout
 
