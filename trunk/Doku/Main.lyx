@@ -1,4 +1,4 @@
-#LyX 1.6.7 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.6.1 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -210,13 +210,11 @@ GPU Architektur
 \end_layout
 
 \begin_layout Standard
-Zum besseren Verständnis der AES-Implementierung, ist ein Überblick über
- die Speicher- und Prozessverwaltungsarchitektur von Nöten.
- Die nachfolgenden Erläuterung beziehen sich zwar speziell auf die verwendete
- Grafikkarte, sind jedoch in großen Teilen auf verwandte Modelle übertragbar.
- Hierbei ist besonders zu beachten, dass die Anzahl der Multiprozessoren
- auf der GPU, sowie die Anzahl der Streaming-Prozessoren (SP) je nach Modell
- unterschiedlich sind.
+Moderne Grafikkarten bestehen aus einer speziellen Architektur, welche es
+ erlaubt, viele Rechenoperationen parallel auszuführen.
+ Je nach Grafikkarte und Hersteller ist die Architektur jedoch verschieden.
+ Im Folgenden wird auf die Architektur der „GeForce 8800 GTS“ von NVIDIA
+ eingegangen, da diese verwendet wurde.
  
 \end_layout
 
@@ -227,56 +225,17 @@ sideways false
 status open
 
 \begin_layout Plain Layout
-\noindent
-\align center
 \begin_inset Graphics
-	filename img/GPU-Architecture.png
-	width 16.5cm
+	filename img/8800GTS.jpg
 
 \end_inset
 
 
-\end_layout
-
-\begin_layout Plain Layout
 \begin_inset Caption
 
 \begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:GPU-Architecture-Overview"
-
-\end_inset
-
-GPU-Architektur
+8800GTS-Architektur
 \end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Prozessverwaltung
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\noindent
-\align center
-\begin_inset Graphics
-	filename img/GPU-Architecture_Grid_and_Blocks.png
-	width 16.5cm
 
 \end_inset
 
@@ -284,14 +243,6 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
-
-\begin_layout Plain Layout
-Streaming Processor
-\end_layout
-
-\end_inset
-
 
 \end_layout
 
@@ -300,96 +251,139 @@ Streaming Processor
 
 \end_layout
 
-\begin_layout Subsubsection
-Multithreaded Instruction Unit (MT IU)
+\begin_layout Standard
+Wie oben dargestellt, besteht die „GeForce 8800 GTS“ aus 8 Multiprozessoren
+ (MP).
+ Jeder der MPs hat einen eigenen Speicher, den sog.
+ „Shared Memory“ (16384 bytes pro MP), sowie eigene Register (8192 pro MP)
+ und 16 Streamingprozessoren (SP).
+ Die SPs führen jeweils genau einen Thread aus.
+ Die Eingabedaten werden aus dem L1-Cache geladen und die Ergebnisse der
+ Berechnungen der SPs werden dort wieder abgelegt.
 \end_layout
 
 \begin_layout Standard
-Die MT IU verwaltet die Ausführung von Threads auf dem Multiprocessor.
- Hierbei werden einzelne Threads zu einem Block, mehrere Blöcke zu einem
- Grid zusammengefasst.
-\end_layout
-
-\begin_layout Subsubsection
-Streaming Multiprocessor
-\end_layout
-
-\begin_layout Standard
-Auf jeden Streaming Multiprocessor wird genau ein Block abgebildet.
- Die in dem Block befindlichen Threads werden -soweit möglich- parallel
- abgearbeitet.
- Hierbei hat jeder Thread in dem Block eine eindeutige ID, auf welche auch
- in dem Thread zugegriffen werden kann.
-\end_layout
-
-\begin_layout Subsubsection
-Streaming Processor (SP)
+Während des Programmierens entscheidet der Programmierer, in wie viele „Blöcke“
+ das Programm aufgeteilt werden soll - also die Parallelität des Programmes
+ im Detail aussieht.
+ Im optimalen Fall lässt sich ein Vielfaches der Anzahl der MPs - Blöcke
+ bilden, womit eine absolute parallele Ausführbarkeit garantiert wäre.
 \end_layout
 
 \begin_layout Standard
-Jeder SP führt genau einen Tread aus.
-\end_layout
-
-\begin_layout Subsection
-Speicherhierarchie 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-UNBEDINGT auf Richtigkeit ueberpruefen!! GRAFIK FEHLT!
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Moderne Grafikarten sind über die PCI-E Schnittstelle an die CPU angebunden.
- Über diesen Bus werden die Daten und Prozesse an die berechnenden Einheiten
- der GPU übertragen.
-\end_layout
-
-\begin_layout Subsubsection
-Global Memory 
-\end_layout
-
-\begin_layout Standard
-Der Global Memory (RAM) ist der Größte Bereich und sowohl von CPU als auch
- von der GPU schreib- und lesbar.
- Dieser Speicher ermöglicht den Austausch von Daten zwischen GPU und CPU.
- Dieser Speicher hat die größte Kapazität, ist jedoch der langsamste der
- Speicherhierarchie bezüglich der GPU.
+Ebenfalls bei dem Programmieren entscheidet der Programmierer, wann welche
+ Daten aus oder in welchen Speicher gelegt werden sollen.
  
 \end_layout
 
-\begin_layout Subsubsection
-Constant Memory
+\begin_layout Subsection
+Speicherhierarchie
 \end_layout
 
 \begin_layout Standard
-Der Constant Memory ist physikalisch auf 64KB beschränkt.
-\end_layout
-
-\begin_layout Subsubsection
-Register
+Der Speicher, auf den sowohl Grafikkarte als auch CPU Zugriff haben, ist
+ der 
+\shape italic
+RAM
+\shape default
+ („Global Memory“).
+ Dieser ist für gewöhnlich am größten und jedoch auch am langsamsten.
 \end_layout
 
 \begin_layout Standard
-Threads eines Bocks teilen sich gemeinsame Register.
-\end_layout
-
-\begin_layout Subsubsection*
+Von diesem Speicher werden die Daten im Verlauf des Programmes in den 
+\shape italic
 Shared Memory
+\shape default
+ geladen.
+ Dieser befindet sich auf der Grafikkarte und ist auch nur von dieser anzusprech
+en.
+ Jeder MP hat die gleiche Größe des Shares Memory: 16 KB.
+ Dieser wird auf die SPs des MPs aufgeteilt.
 \end_layout
 
 \begin_layout Standard
-Für jeden Streaming-Multiprozessor-Prozessor ist ein Shared Memory vorgesehen,
- welches der schnellste -mit 16 KB jedoch auch der kleinste- Speicher in
- der Hierarchie der GPU ist.
- Der Multiprozessor teilt diesen verfügbaren Speicher und seinen Streamingprozes
-soren auf.
- Dieser Speicher kann nur von der GPU gelesen und geschrieben werden.
+usätzlich gibt es noch einen Speicher für Konstanten des Programmes, den
+ sog.
+
+\shape italic
+ Constant Memory
+\shape default
+.
+ Dieser ist physikalisch auf 64 KB beschränkt und für alle SPs des MPs zugänglic
+h! Für die Berechnungen hat jeder SP darüber hinaus 
+\shape italic
+Register
+\shape default
+, welche die schnellsten Zugriffszeiten aufweisen.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename img/IMG0019325.gif
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Speicherhierarchie Grafikkarte
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Bei der Speicherhierarchie ist zu beachten, dass die beiden wichtigsten
+ Ebenen (RAM und Shared Memory) physikalisch getrennt liegen.
+ So liegt der RAM auf dem Mainboard und ist für CPU und Grafikkarte ansprechbar.
+ Der Shared Memory ist nur von der Grafikkarte ansprechbar.
+ So sind die Ergebnisse der Berechnungen von dem Shared Memory explizit
+ auf den RAM zu kopieren!
+\end_layout
+
+\begin_layout Subsection
+Ausführung
+\end_layout
+
+\begin_layout Standard
+Jeder MP bekommt einen Warp zugewiesen.
+ Bei der verwendeten „GeForce 8800 GTS“ entspricht ein Warp einer Ansammlung
+ von 32 Threads.
+ Die Threads bestehen pro Ausführung in dem Warp immer aus dem gleichen
+ Quellcode.
+ Sie bekommen jedoch intern IDs zugewiesen, über welche sie sich identifizieren
+ - und entsprechend ihren Programmfluss beeinflussen - können.
+ Der Thread wird gemeinsam mit den Eingabedaten auf die Grafikkarte kopiert,
+ wobei die Eingabedaten in den Shared Memory abgelegt werden.
+ Anschließend beginnen die SPs mit der Bearbeitung der Daten.
+ Wenn alle Threads berechnet wurden - also im Normalfall jeder SP 2 Threads
+ bearbeitet hat - werden die Ergebnisse aus dem Shared Memory zurück in
+ den RAM kopiert und von dort über die CPU weiterverwendet.
+ Im Anschluss ist der MP bereit für den nächsten Warp und das Ganze beginnt
+ wieder von vorne.
  
 \end_layout
 
