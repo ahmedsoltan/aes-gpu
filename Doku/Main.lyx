@@ -1,4 +1,4 @@
-#LyX 1.6.6.1 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.7 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -122,7 +122,7 @@ Im Folgenden wird mithilfe des CUDA-Frameworks von NVIDIA der AES-Algorithmus
 \begin_inset Quotes eld
 \end_inset
 
-GTS 8800
+8800 GTS
 \begin_inset Quotes erd
 \end_inset
 
@@ -225,8 +225,11 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\noindent
+\align center
 \begin_inset Graphics
 	filename img/8800GTS.jpg
+	width 70text%
 
 \end_inset
 
@@ -263,17 +266,16 @@ Wie oben dargestellt, besteht die „GeForce 8800 GTS“ aus 8 Multiprozessoren
 \end_layout
 
 \begin_layout Standard
-Während des Programmierens entscheidet der Programmierer, in wie viele „Blöcke“
- das Programm aufgeteilt werden soll - also die Parallelität des Programmes
- im Detail aussieht.
+Während des Programmierens wird entschieden, in wie viele „Blöcke“ das Programm
+ aufgeteilt werden soll - also die Parallelität des Programmes im Detail
+ aussieht.
  Im optimalen Fall lässt sich ein Vielfaches der Anzahl der MPs - Blöcke
  bilden, womit eine absolute parallele Ausführbarkeit garantiert wäre.
 \end_layout
 
 \begin_layout Standard
-Ebenfalls bei dem Programmieren entscheidet der Programmierer, wann welche
- Daten aus oder in welchen Speicher gelegt werden sollen.
- 
+Ebenfalls beim Programmieren entscheidet der Entwickler, wann welche Daten
+ aus oder in welchen Speicher gelegt werden sollen.
 \end_layout
 
 \begin_layout Subsection
@@ -303,7 +305,7 @@ en.
 \end_layout
 
 \begin_layout Standard
-usätzlich gibt es noch einen Speicher für Konstanten des Programmes, den
+Zusätzlich gibt es noch einen Speicher für Konstanten des Programmes, den
  sog.
 
 \shape italic
@@ -321,13 +323,17 @@ Register
 
 \begin_layout Standard
 \begin_inset Float figure
+placement h
 wide false
 sideways false
 status open
 
 \begin_layout Plain Layout
+\noindent
+\align center
 \begin_inset Graphics
 	filename img/IMG0019325.gif
+	width 50text%
 
 \end_inset
 
@@ -951,6 +957,50 @@ Tests und Benchmarks
 
 \begin_layout Subsection
 Testumgebung
+\end_layout
+
+\begin_layout Standard
+Zur Evaluierung der Korrektheit der entwickelten Lösung, werden zunächst
+ vom NIST vorgegebene Klartext-Chiffre-Paare inklusive des passenden Schlüssels
+ verwendet.
+ Diese Paare umfassen verschiedene Verschlüsselungsstärken und Textlängen
+ und eignen sich daher für einen aussagekräftigen Praxistest.
+\end_layout
+
+\begin_layout Standard
+Um die Performance zu beurteilen und relevante Laufzeitanalysen durchzuführen,
+ bietet NVIDIA als Teil des CUDA-SDKs den sogenannten 
+\begin_inset Quotes eld
+\end_inset
+
+CUDA Profiler
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Dieses grafische Tool erlaubt einen detaillierten Einblick in die Laufzeiten
+ einzelner CUDA-Befehle und eignet sich somit zur Bewertung derer Geschwindigkei
+t.
+ Auch können damit eventuelle 
+\begin_inset Quotes eld
+\end_inset
+
+Flaschenhälse
+\begin_inset Quotes erd
+\end_inset
+
+ im Code aufgespürt und ggf.
+ korrigiert werden.
+\end_layout
+
+\begin_layout Standard
+Da die folgenden Tests möglichst unabhängig von der restlichen Hardware
+ des Testcomputers sein sollten, wird unter Linux eine RAM-Disk mit verschieden
+ großen (zufälligen) Binärdateien erstellt, um den Einfluss der Festplattenleseg
+eschwindigkeit zu minimieren.
+ Diese Dateien werden dann unter Einbeziehung des CUDA Profilers vollständig
+ ver- bzw.
+ entschlüsselt.
 \end_layout
 
 \begin_layout Subsection
