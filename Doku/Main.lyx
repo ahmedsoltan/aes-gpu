@@ -1,4 +1,4 @@
-#LyX 1.6.7 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.6.1 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -217,6 +217,153 @@ Moderne Grafikkarten bestehen aus einer speziellen Architektur, welche es
  eingegangen, da diese verwendet wurde.
 \end_layout
 
+\begin_layout Subsection
+Begriffsklärung
+\end_layout
+
+\begin_layout Standard
+Um den Aufbau der Architektur und des Programmes besser verstehen zu können,
+ wird an dieser Stelle auf einige Begrifflichkeiten eingegangen.
+\end_layout
+
+\begin_layout Standard
+So bald ein CUDA-Programmfluss angestoßen wird, wird ein sogenanntes Grid
+ erstellt, welches mehrere Threads enthält, welche wiederum alle die gleiche
+ Kernel-Funktion ausführen.
+\end_layout
+
+\begin_layout Standard
+Unter einer 
+\begin_inset Quotes eld
+\end_inset
+
+Kernel-Funktion
+\begin_inset Quotes erd
+\end_inset
+
+ wird die Funktion verstanden, welche parallel auf der Grafikarte ausgeführt
+ werden soll, in diesem Fall sind dies AES_decrypt und AES_encrypt.
+ Da alle Kernel-Funktionen den gleichen Code ausführen, benötigen sie feste
+ und einzigartige Variablen, über die sich die Kernel-Funktionen identifizieren
+ können - schließlich soll jede Kernel-Funktion etwas Anderes und ihr Zugewiesen
+es berechnen.
+\end_layout
+
+\begin_layout Standard
+Hierzu werden die Threads in einer zweistufigen Hierarchie angeordnet.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Wrap figure
+lines 0
+placement o
+overhang 0col%
+width "50col%"
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename img/Grid_Block.emf
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Thread-Hierachie
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Auf der untersten Stufe werden die Threads in Blöcken angeordnet.
+ Die Variablen über welche sich die Threads identifizieren können sind blockId
+ und threadId – Also die Nummer des Blockes und Position des Threads.
+ Diese werden zur Laufzeit des Threads von der CUDA-runtime angelegt.
+ Die Threads eines Blockes werden ein einer dreidimensionalen Struktur angelegt.
+ So besteht jede threadId aus 3 Koordinaten: x, y und z.
+ Wie viele Threads in jeder Richtung angelegt werden, wird bei dem sogenannten
+ „Kernen-Launch“ bestimmt, hierzu später mehr.
+ Es können jedoch maximal 512 Threads einem Block zugewiesen werden.
+ Wie sie in dem Block angelegt werden (z.B.
+ 512x1x1, 16x16x2 oder 8x16x2) ist dem Entwickler überlassen.
+ Da die Threads in einer dreidimensionalen Struktur abgelegt werden, ist
+ auch threadId eine Struktur, die diese 3 Koordinaten hält.
+ Es kann also zum Beispiel die genaue Position des Threads abgefragt werden,
+ indem threadId.x, threadId.y und threadId.z ausgewertet werden.
+\end_layout
+
+\begin_layout Standard
+Auf der oberen Stufe der Hierarchie werden die Blöcke zu einem Grid zusammengefa
+sst.
+ werden die Blöcke in einem zweidimensionalen Koordinatensystem abgelegt.
+ Der Programmierer kann bei dem Aufruf der Kernel-Funktion in Cuda bestimmen,
+ wie viele Blöcke in x- und y-Richtung angelegt werden sollen.
+ Hierbei ist zu beachten, dass die Dimensionen des Grids einmalig angelegt
+ werden - bei „Kernel-Launch“.
+ Später kann hierauf kein Einfluss mehr genommen werden! Auch die blockId
+ muss also eine zweidimensionale Struktur beinhalten: blockId.x und blockId.y.
+\end_layout
+
+\begin_layout Subsection
+Der Kernel-Launch
+\end_layout
+
+\begin_layout Standard
+Der Kernel-Launch bestimmt, in welchen Dimensionen die Blöcke und das Grid
+ angelegt werden sollen.
+ Damit wird auch bestimmt, wie viele Threads insgesamt ausgeführt werden
+ sollen.
+\end_layout
+
+\begin_layout Standard
+Zunächst wird bestimmt, wie die Dimensionen der Blöcke aussehen sollen:
+\end_layout
+
+\begin_layout Standard
+dim3 dimBlock(2,2,2);
+\end_layout
+
+\begin_layout Standard
+Anschließend werden die Dimensionen des Grids festgelegt:
+\end_layout
+
+\begin_layout Standard
+dim3 dimGrid(2,3,1);
+\end_layout
+
+\begin_layout Standard
+Bei den Dimensionen des Grids werden lediglich die x- und y-Dimensionen
+ berücksichtigt, da die Grid-Struktur nur zweidimensional ist.
+ So ist es üblich, als dritte Variable den Wert 1 zu setzen, es ist jedoch
+ ein beliebiger Wert möglich!
+\end_layout
+
+\begin_layout Standard
+Zum Schluss wird der eigentliche Kernel-Launch ausgeführt, gegebenenfalls
+ mit einer Liste an Parametern:
+\end_layout
+
+\begin_layout Standard
+KernelFunktion<<<dimGrid, dimBlock>>>( PARAMETERLISTE); 
+\end_layout
+
+\begin_layout Subsection
+Die Architektur der GeForce 8800 GTS
+\end_layout
+
 \begin_layout Standard
 \begin_inset Float figure
 wide false
@@ -254,27 +401,14 @@ status open
 \end_layout
 
 \begin_layout Standard
-Wie oben dargestellt, besteht die „GeForce 8800 GTS“ aus 8 Multiprozessoren
+Wie oben dargestellt, besteht die „GeForce 8800 GTS“ aus 16 Multiprozessoren
  (MP).
  Jeder der MPs hat einen eigenen Speicher, den sog.
  „Shared Memory“ (16384 bytes pro MP), sowie eigene Register (8192 pro MP)
- und 16 Streamingprozessoren (SP).
+ und 8 Streamingprozessoren (SP).
  Die SPs führen jeweils genau einen Thread aus.
  Die Eingabedaten werden aus dem L1-Cache geladen und die Ergebnisse der
  Berechnungen der SPs werden dort wieder abgelegt.
-\end_layout
-
-\begin_layout Standard
-Während des Programmierens wird entschieden, in wie viele „Blöcke“ das Programm
- aufgeteilt werden soll - also die Parallelität des Programmes im Detail
- aussieht.
- Im optimalen Fall lässt sich ein Vielfaches der Anzahl der MPs - Blöcke
- bilden, womit eine absolute parallele Ausführbarkeit garantiert wäre.
-\end_layout
-
-\begin_layout Standard
-Ebenfalls beim Programmieren entscheidet der Entwickler, wann welche Daten
- aus oder in welchen Speicher gelegt werden sollen.
 \end_layout
 
 \begin_layout Subsection
@@ -330,7 +464,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename img/IMG0019325.gif
+	filename img/Speicherpyramiede.emf
 	width 50text%
 
 \end_inset
