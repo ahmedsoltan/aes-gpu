@@ -215,7 +215,6 @@ Moderne Grafikkarten bestehen aus einer speziellen Architektur, welche es
  Je nach Grafikkarte und Hersteller ist die Architektur jedoch verschieden.
  Im Folgenden wird auf die Architektur der „GeForce 8800 GTS“ von NVIDIA
  eingegangen, da diese verwendet wurde.
- 
 \end_layout
 
 \begin_layout Standard
@@ -318,7 +317,6 @@ h! Für die Berechnungen hat jeder SP darüber hinaus
 Register
 \shape default
 , welche die schnellsten Zugriffszeiten aufweisen.
- 
 \end_layout
 
 \begin_layout Standard
