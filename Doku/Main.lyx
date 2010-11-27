@@ -381,7 +381,7 @@ Jeder MP bekommt einen Warp zugewiesen.
  Die Threads bestehen pro Ausführung in dem Warp immer aus dem gleichen
  Quellcode.
  Sie bekommen jedoch intern IDs zugewiesen, über welche sie sich identifizieren
- - und entsprechend ihren Programmfluss beeinflussen - können.
+ und - entsprechend ihrem Programmfluss - beeinflussen können.
  Der Thread wird gemeinsam mit den Eingabedaten auf die Grafikkarte kopiert,
  wobei die Eingabedaten in den Shared Memory abgelegt werden.
  Anschließend beginnen die SPs mit der Bearbeitung der Daten.
@@ -541,6 +541,7 @@ Der Ablauf jeder einzelnen Block-Verschlüsselung entspricht folgendem Schema:
 
 \begin_layout Standard
 \begin_inset Float figure
+placement h
 wide false
 sideways false
 status open
@@ -619,40 +620,12 @@ Die Konstruktion der S-Box unterliegt Designkriterien, die die Anfälligkeit
 \begin_layout Standard
 Die Rcon-Tabelle ist ebenfalls in Form eines Arrays mit 4 Zeilen und einer
  Spalte für jeden Rundenschlüssel aufgebaut.
- Sie enthält konstante Werte die auf einem mathematischen System beruhen.
+ Sie enthält konstante Werte, die auf einem mathematischen System beruhen.
  Die aus der XOR-Verknüpfung erzeugten Werte ergeben die erste Spalte des
  nächsten Rundenschlüssels.
  Die restlichen drei Spalten ergeben sich jeweils aus einer XOR-Verknüpfung
  der davor liegenden und der zu dieser drei zurückliegenden Spalte.
  Für alle folgenden Rundenschlüssel läuft die Berechnung analog ab.
- Abbildung 3 veranschaulicht dieses Vorgehen.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption
-
-\begin_layout Plain Layout
-Berechnung der Rundenschlüssel
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Subsubsection
@@ -947,6 +920,15 @@ CUDA-spezifische Veränderungen
 Prozessaufteilung
 \end_layout
 
+\begin_layout Standard
+Zur bestmöglichen Ausnutzung der parallelen Verarbeitungsmöglichkeiten der
+ GPU, sollte die Arbeitslast auf möglichst viele Threads aufgeteilt werden.
+ Zu diesem Zweck werden zur Laufzeit die (hardwarespezifischen) Eigenschaften
+ der GPU ausgewertet und die Programmausführung auf die maximal mögliche
+ Anzahl an Blöcken verteilt, in denen schließlich alle verfügbaren Threads
+ genutzt werden.
+\end_layout
+
 \begin_layout Subsubsection
 Speichernutzung
 \end_layout
@@ -996,8 +978,8 @@ Flaschenhälse
 \begin_layout Standard
 Da die folgenden Tests möglichst unabhängig von der restlichen Hardware
  des Testcomputers sein sollten, wird unter Linux eine RAM-Disk mit verschieden
- großen (zufälligen) Binärdateien erstellt, um den Einfluss der Festplattenleseg
-eschwindigkeit zu minimieren.
+ großen (zufälligen) Binärdateien erstellt, um den Einfluss der Festplattenlese-
+ und -schreibgeschwindigkeit zu minimieren.
  Diese Dateien werden dann unter Einbeziehung des CUDA Profilers vollständig
  ver- bzw.
  entschlüsselt.
@@ -1008,7 +990,7 @@ Ergebnisse
 \end_layout
 
 \begin_layout Section
-Ausblick
+Resumée
 \begin_inset Note Note
 status open
 
