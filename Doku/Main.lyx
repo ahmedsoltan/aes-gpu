@@ -1,4 +1,4 @@
-#LyX 1.6.6.1 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.7 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -254,16 +254,18 @@ Hierzu werden die Threads in einer zweistufigen Hierarchie angeordnet.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Wrap figure
-lines 0
-placement o
-overhang 0col%
-width "50col%"
+\begin_inset Float figure
+placement h
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
+\noindent
+\align center
 \begin_inset Graphics
 	filename img/Grid_Block.emf
+	width 60text%
 
 \end_inset
 
@@ -274,11 +276,15 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Thread-Hierachie
+Thread-Hierarchie
 \end_layout
 
 \end_inset
 
+
+\end_layout
+
+\begin_layout Plain Layout
 
 \end_layout
 
