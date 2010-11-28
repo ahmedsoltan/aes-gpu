@@ -292,10 +292,6 @@ Thread-Hierarchie
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
@@ -431,7 +427,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename img/Physical_Memory_Layout.tif
-	width 50text%
+	width 75text%
 
 \end_inset
 
@@ -447,10 +443,6 @@ Speicherlayout
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -582,10 +574,6 @@ Speicherhierarchie Grafikkarte
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
@@ -614,7 +602,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename img/fneng-02-011-g002.jpg
-	width 50text%
+	width 90text%
 
 \end_inset
 
@@ -636,17 +624,179 @@ status open
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
+Ein Thread wird in seinem Block ausgeführt.
+ Hierbei kann der Thread sowohl auf seine 
+\shape italic
+Register
+\shape default
+ (vgl.
+ Abb.
+ 4: 
+\begin_inset Quotes eld
+\end_inset
+
+Private Memory
+\begin_inset Quotes erd
+\end_inset
+
+), wie auch auf den Shared Memory zugreifen.
+ Der Shared Memory dient hierbei zur Kommunikation der Threads untereinander;
+ Alle Threads haben Lese- und Schreibzugriff auf ihn.
+ Der Shared Memory ist hierbei nicht gecached, d.h.
+ Veränderungen im Shared Memory werden direkt in den Hauptspeicher geschrieben.
+ Der Datenaustausch zwischen CPU und Grafikkarte geschieht über den Global
+ Memory.
+ Dies wird explizit beim Programmieren angegeben, welche Daten an welche
+ Position (unter welchem 
+\begin_inset Quotes eld
+\end_inset
+
+Namen
+\begin_inset Quotes erd
+\end_inset
+
+) auf die Grafikkarte kopiert werden sollen.
+\end_layout
+
+\begin_layout Standard
+Im Folgenden wird ein kleines Beispiel zur Veranschaulichung benutzt:
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+\begin_inset Float algorithm
+placement H
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-!!RESUEME DER SPEICHERHIERARCHIE!! -> auf obriges bild (88000GTS-Architektur)
- eingehend!!
+
+\shape italic
+float *a_h, *a_d, *b_h;
+\end_layout
+
+\begin_layout Plain Layout
+
+\shape italic
+nBytes=sizeof(float);
+\end_layout
+
+\begin_layout Plain Layout
+
+\shape italic
+a_h = (float*) malloc(nBytes);
+\end_layout
+
+\begin_layout Plain Layout
+
+\shape italic
+b_h = (float*) malloc(nBytes);
+\end_layout
+
+\begin_layout Plain Layout
+
+\shape italic
+cudaMalloc ((void**) &a_d, nBytes);
+\end_layout
+
+\begin_layout Plain Layout
+
+\shape italic
+cudaMemcpy(a_d, a_h, nBytes, cudaMemocpyHostToDevice);
+\end_layout
+
+\begin_layout Plain Layout
+
+\shape italic
+[...]
+\end_layout
+
+\begin_layout Plain Layout
+
+\shape italic
+cudaMemcpy(b_h, a_d.
+ nBytes, cudaMemcpyDecviceToHost);
+\end_layout
+
+\begin_layout Plain Layout
+
+\shape italic
+free(a_h); 
+\end_layout
+
+\begin_layout Plain Layout
+
+\shape italic
+free(b_h);
+\end_layout
+
+\begin_layout Plain Layout
+
+\shape italic
+cudaFree(a_d);
 \end_layout
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Hier werden zunächst 3 Variablen angelegt: 
+\shape italic
+a_h
+\shape default
+, 
+\shape italic
+b_h
+\shape default
+ (Host-Daten) sowie
+\shape italic
+ a_d
+\shape default
+ (Device-Daten).
+ Hierzu wird der Platz im Speicher -sowohl auf dem Host als auch auf der
+ Grafikkarte) reserviert.
+ Der Befehl 
+\shape italic
+cudaMalloc
+\shape default
+ legt also einen 
+\shape italic
+nBytes
+\shape default
+ großen Platz im Speicher für die Variable 
+\shape italic
+a_d
+\shape default
+ an, in den dann mittels 
+\shape italic
+cudaMemcpy 
+\shape default
+die Werte von 
+\shape italic
+a_h
+\shape default
+ kopiert werden.
+ Nach ggf.
+ einiger Berechnung wird dann der Inhalt der Device-Variable 
+\shape italic
+a_d
+\shape default
+ zurück in die Host-Variable 
+\shape italic
+b_h
+\shape default
+ kopiert.
+ Hierbei ist zu beachten, dass die Daten wirklich kopiert werden, es sollten
+ also möglich wenig Daten ausgetauscht werden müssen, bzw.
+ das Kopieren nicht doppelt erfolgen.
+ Zum Schulss werden die Daten aus dem Host-Speicher und dem Device-Speicher
+ gelöscht.
+ Es fällt auf, dass die Syntax von CUDA an die C-Syntax angelehnt ist, was
+ den Einstieg von C-Programmierern in CUDA wesentlich vereinfacht.
 \end_layout
 
 \begin_layout Subsection
