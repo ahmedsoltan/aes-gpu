@@ -1,4 +1,4 @@
-#LyX 1.6.6.1 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.7 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -367,7 +367,19 @@ Zunächst wird bestimmt, wie die Dimensionen der Blöcke aussehen sollen:
 \begin_layout Standard
 
 \shape italic
+\begin_inset listings
+lstparams "basicstyle={\normalsize}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
 dim3 dimBlock(2,2,2);
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -377,7 +389,18 @@ Anschließend werden die Dimensionen des Grids festgelegt:
 \begin_layout Standard
 
 \shape italic
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
 dim3 dimGrid(2,3,1);
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -395,7 +418,18 @@ Zum Schluss wird der eigentliche Kernel-Launch ausgeführt.
 \begin_layout Standard
 
 \shape italic
-KernelFunktion<<<dimGrid, dimBlock>>>( PARAMETERLISTE); 
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+KernelFunktion<<<dimGrid, dimBlock>>>( PARAMETERLISTE);
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -663,78 +697,64 @@ Im Folgenden wird ein kleines Beispiel zur Veranschaulichung benutzt:
 \end_layout
 
 \begin_layout Standard
-
-\shape italic
-\begin_inset Float algorithm
-placement H
-wide false
-sideways false
+\begin_inset listings
+lstparams "basicstyle={\normalsize},language={C++}"
+inline false
 status open
 
 \begin_layout Plain Layout
 
-\shape italic
 float *a_h, *a_d, *b_h;
 \end_layout
 
 \begin_layout Plain Layout
 
-\shape italic
 nBytes=sizeof(float);
 \end_layout
 
 \begin_layout Plain Layout
 
-\shape italic
 a_h = (float*) malloc(nBytes);
 \end_layout
 
 \begin_layout Plain Layout
 
-\shape italic
 b_h = (float*) malloc(nBytes);
 \end_layout
 
 \begin_layout Plain Layout
 
-\shape italic
 cudaMalloc ((void**) &a_d, nBytes);
 \end_layout
 
 \begin_layout Plain Layout
 
-\shape italic
 cudaMemcpy(a_d, a_h, nBytes, cudaMemocpyHostToDevice);
 \end_layout
 
 \begin_layout Plain Layout
 
-\shape italic
 [...]
 \end_layout
 
 \begin_layout Plain Layout
 
-\shape italic
 cudaMemcpy(b_h, a_d.
  nBytes, cudaMemcpyDecviceToHost);
 \end_layout
 
 \begin_layout Plain Layout
 
-\shape italic
 free(a_h); 
 \end_layout
 
 \begin_layout Plain Layout
 
-\shape italic
 free(b_h);
 \end_layout
 
 \begin_layout Plain Layout
 
-\shape italic
 cudaFree(a_d);
 \end_layout
 
