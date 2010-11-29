@@ -362,13 +362,10 @@ Der Kernel-Launch bestimmt, in welchen Dimensionen die Blöcke und das Grid
 
 \begin_layout Standard
 Zunächst wird bestimmt, wie die Dimensionen der Blöcke aussehen sollen:
-\end_layout
-
-\begin_layout Standard
-
 \shape italic
+
 \begin_inset listings
-lstparams "basicstyle={\normalsize}"
+lstparams "basicstyle={\normalsize\ttfamily}"
 inline false
 status open
 
@@ -384,12 +381,10 @@ dim3 dimBlock(2,2,2);
 
 \begin_layout Standard
 Anschließend werden die Dimensionen des Grids festgelegt:
-\end_layout
-
-\begin_layout Standard
-
 \shape italic
+
 \begin_inset listings
+lstparams "basicstyle={\ttfamily}"
 inline false
 status open
 
@@ -413,12 +408,10 @@ Bei den Dimensionen des Grids werden lediglich die x- und y-Dimensionen
 \begin_layout Standard
 Zum Schluss wird der eigentliche Kernel-Launch ausgeführt.
  Hierbei ist es möglich, den Threads eine Liste an Parametern zu übergeben:
-\end_layout
-
-\begin_layout Standard
-
 \shape italic
+
 \begin_inset listings
+lstparams "basicstyle={\ttfamily}"
 inline false
 status open
 
@@ -698,7 +691,7 @@ Im Folgenden wird ein kleines Beispiel zur Veranschaulichung benutzt:
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\normalsize},language={C++}"
+lstparams "basicstyle={\normalsize\ttfamily},language={C++}"
 inline false
 status open
 
