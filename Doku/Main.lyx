@@ -702,7 +702,7 @@ float *a_h, *a_d, *b_h;
 
 \begin_layout Plain Layout
 
-nBytes=sizeof(float);
+nBytes = sizeof(float);
 \end_layout
 
 \begin_layout Plain Layout
@@ -727,13 +727,20 @@ cudaMemcpy(a_d, a_h, nBytes, cudaMemocpyHostToDevice);
 
 \begin_layout Plain Layout
 
+\end_layout
+
+\begin_layout Plain Layout
+
 [...]
 \end_layout
 
 \begin_layout Plain Layout
 
-cudaMemcpy(b_h, a_d.
- nBytes, cudaMemcpyDecviceToHost);
+\end_layout
+
+\begin_layout Plain Layout
+
+cudaMemcpy(b_h, a_d, nBytes, cudaMemcpyDecviceToHost);
 \end_layout
 
 \begin_layout Plain Layout
@@ -1369,10 +1376,380 @@ Zur bestmöglichen Ausnutzung der parallelen Verarbeitungsmöglichkeiten der
  der GPU ausgewertet und die Programmausführung auf die maximal mögliche
  Anzahl an Blöcken verteilt, in denen schließlich alle verfügbaren Threads
  genutzt werden.
+ Im Quelltext wird dies auf folgende Weise gelöst:
+\begin_inset listings
+lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,language={C++},numbers=left,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+void AES::encrypt(const uint *pt, uint *ct, uint n = 1) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	uint *cpt, *cct;
+\end_layout
+
+\begin_layout Plain Layout
+
+	uint size = (n << 2)*sizeof(uint);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	// Speicherreservierung auf GPU
+\end_layout
+
+\begin_layout Plain Layout
+
+	cudaMalloc((void**)&cpt, size);
+\end_layout
+
+\begin_layout Plain Layout
+
+	cudaMalloc((void**)&cct, size); 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	// Kopieren des Klartextes in den Global Memory der Grafikkarte
+\end_layout
+
+\begin_layout Plain Layout
+
+	cudaMemcpy(cpt, pt, size, cudaMemcpyHostToDevice);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	// Ermitteln der architekturspezifischen Hardware
+\end_layout
+
+\begin_layout Plain Layout
+
+	struct cudaDeviceProp prop;
+\end_layout
+
+\begin_layout Plain Layout
+
+	cudaGetDeviceProperties(&prop, 0);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	// Aufteilung der Berechnungen auf möglichst viele Threads
+\end_layout
+
+\begin_layout Plain Layout
+
+	// Um Kompatibilitätsprobleme zu vermeiden, werden bei fehlender
+\end_layout
+
+\begin_layout Plain Layout
+
+	// Parameterübergabe von n sinnvolle Defaultwerte genutzt.
+\end_layout
+
+\begin_layout Plain Layout
+
+	uint blocks, threads = 1; 
+\end_layout
+
+\begin_layout Plain Layout
+
+	if(n != 1) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		threads = (n < prop.maxThreadsPerBlock*2) ? n / 2 : prop.maxThreadsPerBlock;
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	blocks = n / threads;
+\end_layout
+
+\begin_layout Plain Layout
+
+	dim3 dimBlock(threads);
+\end_layout
+
+\begin_layout Plain Layout
+
+	dim3 dimGrid(blocks);
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	// Erstellen des Kernel-Services sowie Start der Verschlüsselung
+\end_layout
+
+\begin_layout Plain Layout
+
+	// Das Programm wartet an dieser Stelle auf die Rückgabe der
+\end_layout
+
+\begin_layout Plain Layout
+
+	// Berechnungen.
+\end_layout
+
+\begin_layout Plain Layout
+
+	AES_encrypt<<<dimGrid, dimBlock, size>>>(cpt, cct, ce_sched, Nr);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	// Kopieren des Chiffrats in den Arbeitsspeicher
+\end_layout
+
+\begin_layout Plain Layout
+
+	cudaMemcpy(ct, cct, size, cudaMemcpyDeviceToHost);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	// Speicherfreigabe
+\end_layout
+
+\begin_layout Plain Layout
+
+	cudaFree(cpt);
+\end_layout
+
+\begin_layout Plain Layout
+
+	cudaFree(cct);
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Das Programm ermittelt also in den Zeilen 20 bis 25 die benötigten Parameter
+ zur optimalen Aufteilung de Arbeitslast, erstellt Grids und Blöcke in entsprech
+ender Dimensionierung und stößt den Kernel-Service für jeden einzelnen der
+ Threads an.
 \end_layout
 
 \begin_layout Subsubsection
 Speichernutzung
+\end_layout
+
+\begin_layout Standard
+Neben dem obligatorischen Kopiervorgängen vom RAM des Host-PCs in den 
+\shape italic
+Global Memory
+\shape default
+ der Grafikkarte und zurück, werden die temporären Variablen in den für
+ ihren jeweiligen Zweck laufzeiteffizientesten Speicherarten erstellt und
+ verwendet.
+ Da zur Verschlüsselung - wie bereits beschreiben - eine Vielzahl von vorberechn
+eten Tabellen benutzt werden, werden diese Werte bei Aufruf des Klassenkonstrukt
+ors in den schnellen 
+\shape italic
+Constant Memory
+\shape default
+ kopiert.
+\end_layout
+
+\begin_layout Standard
+Der folgende Ausschnitt demonstriert den Speicherzugriff innerhalb der Kernel-Fu
+nktion 
+\shape italic
+AES_encrypt
+\shape default
+ sowie (nebensächlich) die Adressierung des zu verschlüsselnden Textes im
+ 
+\shape italic
+Global Memory
+\shape default
+.
+ 
+\begin_inset listings
+lstparams "basicstyle={\scriptsize\ttfamily},numbers=left"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+__global__ void AES_encrypt(const uint *pt, uint *ct, uint *rek, uint Nr)
+ {
+\end_layout
+
+\begin_layout Plain Layout
+
+	// Berechnung des (threadabhängigen) Offsets zur Adressierung des Speichers
+\end_layout
+
+\begin_layout Plain Layout
+
+	int x = blockIdx.x * blockDim.x + threadIdx.x;
+\end_layout
+
+\begin_layout Plain Layout
+
+	int y = blockIdx.y * blockDim.y + threadIdx.y;
+\end_layout
+
+\begin_layout Plain Layout
+
+	int i = x + y * gridDim.x * blockDim.x;
+\end_layout
+
+\begin_layout Plain Layout
+
+	int offset = i << 2;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	// Deklarieren der temporären Variablen im Shared Memory
+\end_layout
+
+\begin_layout Plain Layout
+
+	__shared__ __device__ uint s0, s1, s2, s3, t0, t1, t2, t3;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	// Beginn der Verschlüsselung...
+\end_layout
+
+\begin_layout Plain Layout
+
+	s0 = pt[offset + 0] ^ rek[0];
+\end_layout
+
+\begin_layout Plain Layout
+
+	s1 = pt[offset + 1] ^ rek[1];
+\end_layout
+
+\begin_layout Plain Layout
+
+	s2 = pt[offset + 2] ^ rek[2];
+\end_layout
+
+\begin_layout Plain Layout
+
+	s3 = pt[offset + 3] ^ rek[3];
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	[...]
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Der threadspezifische Offset zur Speicheradressierung berechnet sich wie
+ in Kapitel 2.1 beschrieben aus der 
+\shape italic
+blockId
+\shape default
+, der Blockgröße 
+\shape italic
+blockDim
+\shape default
+ und der 
+\shape italic
+threadId
+\shape default
+.
+ Anschließend werden in Zeile 9 die temporären Variablen 
+\shape italic
+s0
+\shape default
+, 
+\shape italic
+s1
+\shape default
+ etc.
+ im 
+\shape italic
+Shared Memory
+\shape default
+ angelegt.
+ Dies erfordert zwar nach Abschluss der Verschlüsselung eine zusätzliche
+ Kopieroperation zurück in den 
+\shape italic
+Global Memory
+\shape default
+, beschleunigt den Algorithmus aber dennoch aufgrund der schnelleren Zugriffsges
+chwindigkeit auf die im weiteren Verlauf häufig genutzten Speicherstellen.
 \end_layout
 
 \begin_layout Section
