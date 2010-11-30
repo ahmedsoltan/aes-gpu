@@ -1,4 +1,4 @@
-#LyX 1.6.7 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.6.1 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -139,10 +139,17 @@ AES im Kurzüberblick
 \end_layout
 
 \begin_layout Standard
-Der Advanced Encryption Standard (AES) ist ein symmetrisches Kryptosystem.
+Der 
+\shape italic
+Advanced Encryption Standard
+\shape default
+ (AES) ist ein symmetrisches Kryptosystem.
  Es wurde von Joan Daemen und Vincent Rijmen im Rahmen eines international
- ausgeschriebenen Wettbewerbes des National Institute of Standards and Technolog
-y (NIST) entwickelt.
+ ausgeschriebenen Wettbewerbes des 
+\shape italic
+National Institute of Standards and Technology
+\shape default
+ (NIST) entwickelt.
  Als Nachfolger von DES und 3DES, gilt AES seit 2000 als De-facto Verschlüsselun
 gsstandard, welcher Dank seiner starken Verschlüsselung selbst höchsten
  Sicherheitsansprüchen genügt.
@@ -150,7 +157,8 @@ gsstandard, welcher Dank seiner starken Verschlüsselung selbst höchsten
 
 \begin_layout Standard
 Bei AES handelt es sich um ein Blockverschlüsselungssystem, auch Blockchiffre
- genannt, also ein Verschlüsselungsverfahren, bei dem der Klartext in eine
+ genannt.
+ Es ist also ein Verschlüsselungsverfahren, bei dem der Klartext in eine
  Folge gleichgroßer Blöcke zerlegt wird.
  Diese Blöcke werden anschließend unabhängig voneinander mit einem aus einem
  Schlüsselwort berechneten Blockschlüssel chiffriert.
@@ -166,7 +174,7 @@ AES schränkt die Blocklänge auf 128 Bit ein.
 den wird.
  AES bietet ein sehr hohes Maß an Sicherheit und ist in den USA sogar für
  staatliche Dokumente mit höchster Geheimhaltungsstufe zugelassen.
- Der Algorithmus ist frei verfügbar und darf ohne Lizenzgebühren eingesetzt
+ Der Algorithmus ist frei verfügbar und darf ohne Lizenzgebühren eingesetzt,
  sowie in Software bzw.
  Hardware implementiert werden.
 \end_layout
@@ -176,19 +184,22 @@ CUDA Framework
 \end_layout
 
 \begin_layout Standard
-Das „Compute Unified Device Architecture Software Developer Kit“ (CUDA SDK)
- wurde von NVIDA am 15.
+Das 
+\shape italic
+Compute Unified Device Architecture Software Developer Kit
+\shape default
+ (CUDA SDK) wurde von NVIDA am 15.
  Februar 2007 erstmals der Öffentlichkeit vorgestellt.
  Intention dieses SDKs ist, die Programmierung aktueller Grafikkarten unter
  einer einheitlichen und standardisierten Schnittstelle zu ermöglichen.
 \end_layout
 
 \begin_layout Standard
-Die Architektur moderner GPUs ist aufgrund ihrer Geschichte als reine Berechnung
-seinheit für Bildschirmausgaben für den Zweck ausgelegt, Operationen parallel
+Die Architektur moderner GPUs ist, aufgrund ihrer Geschichte als reine Berechnun
+gseinheit für Bildschirmausgaben, für den Zweck ausgelegt, Operationen parallel
  auszuführen.
- Als Co-Prozessor können GPUs somit Dank der CUDA-API dazu genutzt werden,
- bestimmte Programmteile signifikat schneller abzuarbeiten.
+ Als Co-Prozessor genutzt können GPUs somit Dank der CUDA-API dazu verwendet
+ werden, bestimmte Programmteile signifikat schneller abzuarbeiten.
 \end_layout
 
 \begin_layout Standard
@@ -212,9 +223,9 @@ GPU Architektur
 \begin_layout Standard
 Moderne Grafikkarten bestehen aus einer speziellen Architektur, welche es
  erlaubt, viele Rechenoperationen parallel auszuführen.
- Je nach Grafikkarte und Hersteller ist die Architektur jedoch verschieden.
+ Je nach Grafikkarte und Hersteller ist die Architektur verschieden.
  Im Folgenden wird auf die Architektur der „GeForce 8800 GTS“ von NVIDIA
- eingegangen, da diese verwendet wurde.
+ eingegangen, da Diese hier verwendet wurde.
 \end_layout
 
 \begin_layout Subsection
@@ -227,22 +238,25 @@ Um den Aufbau der Architektur und des Programmes besser verstehen zu können,
 \end_layout
 
 \begin_layout Standard
-So bald ein CUDA-Programmfluss angestoßen wird, wird ein sogenanntes Grid
- erstellt, welches mehrere Threads enthält, welche wiederum alle die gleiche
- Kernel-Funktion ausführen.
+So bald ein CUDA-Programmfluss angestoßen wird, wird ein sogenanntes 
+\shape italic
+Grid
+\shape default
+ erstellt, welches mehrere 
+\shape italic
+Threads
+\shape default
+ enthält, welche wiederum alle die gleiche 
+\shape italic
+Kernel-Funktion
+\shape default
+ ausführen.
 \end_layout
 
 \begin_layout Standard
-Unter einer 
-\begin_inset Quotes eld
-\end_inset
-
-Kernel-Funktion
-\begin_inset Quotes erd
-\end_inset
-
- wird die Funktion verstanden, welche parallel auf der Grafikarte ausgeführt
- werden soll, in diesem Fall sind dies 
+Unter einer Kernel-Funktion wird die Funktion verstanden, welche parallel
+ auf der Grafikkarte ausgeführt werden soll.
+ In diesem Fall sind dies 
 \shape italic
 AES_decrypt
 \shape default
@@ -252,9 +266,8 @@ AES_encrypt
 \shape default
 .
  Da alle Kernel-Funktionen den gleichen Code ausführen, benötigen sie feste
- und einzigartige Variablen, über die sich die Kernel-Funktionen identifizieren
- können - schließlich soll jede Kernel-Funktion etwas Anderes und ihr Zugewiesen
-es berechnen.
+ und einzigartige Variablen, über die sie sich identifizieren können - schließli
+ch soll Jede etwas Anderes und ihr zugewiesenes berechnen.
 \end_layout
 
 \begin_layout Standard
@@ -299,21 +312,46 @@ Thread-Hierarchie
 
 \begin_layout Standard
 Auf der untersten Stufe werden die Threads in Blöcken angeordnet.
- Die Variablen über welche sich die Threads identifizieren können sind blockId
- und threadId – Also die Nummer des Blockes und Position des Threads im
- Block.
- Diese werden zur Laufzeit des Threads von der CUDA-runtime angelegt.
- Die Threads eines Blockes werden ein einer dreidimensionalen Struktur angelegt.
- So besteht jede threadId aus 3 Koordinaten: x, y und z.
+ Die Variablen über welche sich die Threads identifizieren können sind 
+\shape italic
+blockId
+\shape default
+ und 
+\shape italic
+threadId
+\shape default
+ – Also die Nummer des Blockes und Position des Threads im Block.
+ Diese werden zur Laufzeit des Threads von der CUDA-Runtime angelegt.
+ Die Threads eines Blockes werden in einer dreidimensionalen Struktur angelegt.
+ So besteht jede 
+\shape italic
+threadId
+\shape default
+ aus 3 Koordinaten:
+\shape italic
+ x, y
+\shape default
+ und 
+\shape italic
+z
+\shape default
+.
  Wie viele Threads in jeder Richtung angelegt werden, wird bei dem sogenannten
- „Kernen-Launch“ bestimmt, hierzu später mehr.
- Es können jedoch maximal 512 Threads einem Block zugewiesen werden.
+ 
+\shape italic
+Kernel-Launch
+\shape default
+ bestimmt, hierzu später mehr.
+ Maximal können jedoch 512 Threads einem Block zugewiesen werden.
  Wie sie in dem Block angelegt werden (z.B.
  512x1x1, 16x16x2 oder 8x16x2) ist dem Entwickler überlassen.
  Da die Threads in einer dreidimensionalen Struktur abgelegt werden, ist
- auch threadId eine Struktur, die diese 3 Koordinaten hält.
- Es kann also zum Beispiel die genaue Position des Threads abgefragt werden,
- indem 
+ auch 
+\shape italic
+threadId
+\shape default
+ eine Struktur, die diese 3 Koordinaten hält.
+ Es kann die genaue Position des Threads abgefragt werden, indem 
 \shape italic
 threadId.x
 \shape default
@@ -331,13 +369,20 @@ threadId.z
 \begin_layout Standard
 Auf der oberen Stufe der Hierarchie werden die Blöcke zu einem Grid zusammengefa
 sst.
- werden die Blöcke (mit den darin abgelegten Threads) in einem zweidimensionalen
+ Die Blöcke (mit den darin abgelegten Threads) werden in einem zweidimensionalen
  Koordinatensystem abgelegt.
  Der Programmierer kann bei dem Aufruf der Kernel-Funktion in CUDA bestimmen,
  wie viele Blöcke in x- und y-Richtung angelegt werden sollen.
  Hierbei ist zu beachten, dass die Dimensionen des Grids einmalig angelegt
- werden - bei „Kernel-Launch“.
- Später kann hierauf kein Einfluss mehr genommen werden! Auch die blockId
+ werden - beim 
+\shape italic
+Kernel-Launch
+\shape default
+.
+ Später kann hierauf kein Einfluss mehr genommen werden! Auch die 
+\shape italic
+blockId
+\shape default
  muss also eine zweidimensionale Struktur beinhalten: 
 \shape italic
 blockId.x
@@ -361,7 +406,7 @@ Der Kernel-Launch bestimmt, in welchen Dimensionen die Blöcke und das Grid
 \end_layout
 
 \begin_layout Standard
-Zunächst wird bestimmt, wie die Dimensionen der Blöcke aussehen sollen:
+Zuerst wird bestimmt, wie die Dimensionen der Blöcke aussehen sollen:
 \shape italic
 
 \begin_inset listings
@@ -401,8 +446,8 @@ dim3 dimGrid(2,3,1);
 \begin_layout Standard
 Bei den Dimensionen des Grids werden lediglich die x- und y-Dimensionen
  berücksichtigt, da die Grid-Struktur nur zweidimensional ist.
- So ist es üblich, als dritte Variable den Wert 1 zu setzen, es ist jedoch
- ein beliebiger Wert möglich!
+ Es ist üblich, als dritte Variable den Wert 1 zu setzen, jedoch ist ein
+ beliebiger Wert möglich!
 \end_layout
 
 \begin_layout Standard
@@ -426,8 +471,8 @@ KernelFunktion<<<dimGrid, dimBlock>>>( PARAMETERLISTE);
 \end_layout
 
 \begin_layout Standard
-Es ist jedoch zu beachten, dass alle Threads, welche mit diem Kernel-Launch
- angestossen werden, die selben Parameter bekommen.
+Zu beachten ist, dass alle Threads, welche mit dem Kernel-Launch angestoßen
+ werden, die selben Parameter bekommen.
 \end_layout
 
 \begin_layout Subsection
@@ -436,8 +481,11 @@ Die Architektur der GeForce 8800 GTS
 
 \begin_layout Standard
 Die Grafikkarte ist über einen Chipsatz mit der CPU verbunden.
- Hierbei hat der Chipsatz nur Zugriff auf den Global-Memory der Grafikkarte:
- Über diesen wird also mit dem Host kommuniziert.
+ Hierbei hat der Chipsatz nur Zugriff auf den
+\shape italic
+ Global-Memory
+\shape default
+ der Grafikkarte: Über diesen wird also mit dem Host kommuniziert.
 \end_layout
 
 \begin_layout Standard
@@ -484,20 +532,24 @@ Die „GeForce 8800 GTS“ besteht aus 16 Multiprozessoren (MP).
  „Shared Memory“ (16384 bytes pro MP), sowie eigene Register (8192 pro MP)
  und 8 Streamingprozessoren (SP).
  Die SPs führen jeweils genau einen Thread aus.
- Ist ein Thread beendet, so wird der Nächste gestartet.
+ Ist ein Thread beendet, wird der Nächste gestartet.
  Diese Aufgabe übernimmt ein Scheduler.
 \end_layout
 
 \begin_layout Standard
-Ist ein Block einem MP zugweisen, so werden jeweils 32 Threads aus dem Block
+Ist ein Block einem MP zugweisen, werden jeweils 32 Threads aus dem Block
  zu einem 
 \shape italic
 Warp
 \shape default
- zusammengefasst (wobei die Größe der Warps von der Hardware der Grafikkarte
- abhängt).
- In dem Warp werden die threadIds fortlaufend vergeben (der erste Warp von
- 0 bis 31, der zweite von 32 bis 63...).
+ zusammengefasst (die Größe der Warps hängt von der Hardware der Grafikkarte
+ ab).
+ Im Warp werden die 
+\shape italic
+threadId
+\shape default
+s fortlaufend vergeben (der erste Warp von 0 bis 31, der zweite von 32 bis
+ 63...).
  Da bei der verwendeten Grafikkarte maximal 768 Threads einem MP zugeordnet
  werden können, kann jeder MP 768/32=24 Warps beherbergen.
 \end_layout
@@ -516,16 +568,16 @@ wartenden Warps
 \end_inset
 
  eingegliedert.
- Dem SP der den Thread ausführte, wird ein Warp aus der Liste der 
+ Dem SP, der den Thread ausführte, wird ein Warp aus der Liste der 
 \begin_inset Quotes eld
 \end_inset
 
-ausführungs-fertigen Warps
+startfertigen Warps
 \begin_inset Quotes erd
 \end_inset
 
  zugeordnet und gestartet.
- Das führt dazu, dass die SPs nahezu immer ausgelastet sind.
+ Dies führt dazu, dass die SPs nahezu immer ausgelastet sind.
 \end_layout
 
 \begin_layout Subsection
@@ -538,8 +590,12 @@ Der Speicher, auf den sowohl Grafikkarte als auch CPU Zugriff haben, ist
 \shape italic
 (D)RAM
 \shape default
- („Global Memory“).
- Dieser ist für gewöhnlich am größten und jedoch auch am langsamsten.
+ (
+\shape italic
+Global Memory
+\shape default
+).
+ Dieser ist für gewöhnlich am größten - jedoch auch am langsamsten.
 \end_layout
 
 \begin_layout Standard
@@ -550,7 +606,11 @@ Shared Memory
  geladen.
  Dieser befindet sich auf der Grafikkarte und ist auch nur von dieser anzusprech
 en.
- Jeder MP hat die gleiche Größe des Shares Memory: 16 KB.
+ Jeder MP hat die gleiche Größe des 
+\shape italic
+Shared Memory
+\shape default
+: 16 KB.
  Dieser wird auf die SPs des MPs aufgeteilt.
 \end_layout
 
@@ -608,13 +668,36 @@ Speicherhierarchie Grafikkarte
 
 \begin_layout Standard
 Bei der Speicherhierarchie ist zu beachten, dass die beiden wichtigsten
- Ebenen (DRAM und Global Memory) physikalisch getrennt liegen (Vgl.
+ Ebenen (
+\shape italic
+DRAM
+\shape default
+ und 
+\shape italic
+Global Memory
+\shape default
+) physikalisch getrennt liegen (Vgl.
  Abb.
  2).
- So liegt der RAM auf dem Mainboard und ist für CPU und Grafikkarte ansprechbar.
- Der Global Memory ist nur von der Grafikkarte ansprechbar.
- So sind die Ergebnisse der Berechnungen von dem Shared Memory explizit
- auf den RAM zu kopieren!
+ Der 
+\shape italic
+RAM
+\shape default
+ liegt auf dem Mainboard und ist für CPU und Grafikkarte ansprechbar.
+ Der 
+\shape italic
+Global Memory
+\shape default
+ ist nur von der Grafikkarte ansprechbar.
+ Die Ergebnisse der Berechnungen sind vom 
+\shape italic
+Shared Memory
+\shape default
+ explizit in den 
+\shape italic
+RAM
+\shape default
+ zu kopieren!
 \end_layout
 
 \begin_layout Standard
@@ -659,22 +742,33 @@ Register
  (vgl.
  Abb.
  4: 
-\begin_inset Quotes eld
-\end_inset
-
+\shape italic
 Private Memory
-\begin_inset Quotes erd
-\end_inset
-
-), wie auch auf den Shared Memory zugreifen.
- Der Shared Memory dient hierbei zur Kommunikation der Threads untereinander;
- Alle Threads haben Lese- und Schreibzugriff auf ihn.
- Der Shared Memory ist hierbei nicht gecached, d.h.
- Veränderungen im Shared Memory werden direkt in den Hauptspeicher geschrieben.
- Der Datenaustausch zwischen CPU und Grafikkarte geschieht über den Global
- Memory.
- Dies wird explizit beim Programmieren angegeben, welche Daten an welche
- Position (unter welchem 
+\shape default
+), wie auch auf den 
+\shape italic
+Shared Memory
+\shape default
+ zugreifen.
+ Der 
+\shape italic
+Shared Memory
+\shape default
+ dient hierbei zur Kommunikation der Threads untereinander; Alle Threads
+ haben Lese- und Schreibzugriff auf ihn.
+ Er ist hierbei nicht gecached, d.h.
+ Veränderungen im 
+\shape italic
+Shared Memory
+\shape default
+ werden direkt in den Hauptspeicher geschrieben.
+ Der Datenaustausch zwischen CPU und Grafikkarte geschieht über den 
+\shape italic
+Global Memory
+\shape default
+.
+ Beim Programmieren wird explizit angegeben, welche Daten an welche Position
+ (unter welchem 
 \begin_inset Quotes eld
 \end_inset
 
@@ -686,7 +780,7 @@ Namen
 \end_layout
 
 \begin_layout Standard
-Im Folgenden wird ein kleines Beispiel zur Veranschaulichung benutzt:
+Im Folgenden ein kleines Beispiel zur Veranschaulichung:
 \end_layout
 
 \begin_layout Standard
@@ -764,7 +858,7 @@ cudaFree(a_d);
 \end_layout
 
 \begin_layout Standard
-Hier werden zunächst 3 Variablen angelegt: 
+Es werden zunächst 3 Variablen angelegt: 
 \shape italic
 a_h
 \shape default
@@ -777,13 +871,13 @@ b_h
  a_d
 \shape default
  (Device-Daten).
- Hierzu wird der Platz im Speicher -sowohl auf dem Host als auch auf der
- Grafikkarte) reserviert.
+ Hierfür wird der Platz im Speicher -sowohl auf dem Host als auch auf der
+ Grafikkarte- reserviert.
  Der Befehl 
 \shape italic
 cudaMalloc
 \shape default
- legt also einen 
+ legt einen 
 \shape italic
 nBytes
 \shape default
@@ -800,8 +894,7 @@ die Werte von
 a_h
 \shape default
  kopiert werden.
- Nach ggf.
- einiger Berechnung wird dann der Inhalt der Device-Variable 
+ Nach einigen Berechnungen wird danach der Inhalt der Device-Variable 
 \shape italic
 a_d
 \shape default
@@ -810,13 +903,10 @@ a_d
 b_h
 \shape default
  kopiert.
- Hierbei ist zu beachten, dass die Daten wirklich kopiert werden, es sollten
- also möglich wenig Daten ausgetauscht werden müssen, bzw.
- das Kopieren nicht doppelt erfolgen.
- Zum Schulss werden die Daten aus dem Host-Speicher und dem Device-Speicher
- gelöscht.
- Es fällt auf, dass die Syntax von CUDA an die C-Syntax angelehnt ist, was
- den Einstieg von C-Programmierern in CUDA wesentlich vereinfacht.
+ Hierbei ist zu beachten, dass die Daten wirklich kopiert werden.
+ Es sollten also möglich wenig Daten ausgetauscht werden müssen, bzw.
+ das Kopieren sollte nicht doppelt erfolgen.
+ Zum Schluss werden die Daten aus dem Host- und dem Device-Speicher gelöscht.
 \end_layout
 
 \begin_layout Subsection
@@ -827,16 +917,22 @@ Ausführung
 Jeder MP bekommt einen Warp zugewiesen.
  Bei der verwendeten „GeForce 8800 GTS“ entspricht ein Warp einer Ansammlung
  von 32 Threads.
- Die Threads bestehen pro Ausführung in dem Warp immer aus dem gleichen
- Quellcode.
- Sie bekommen jedoch intern IDs zugewiesen, über welche sie sich identifizieren
+ Die Threads bestehen immer aus dem selben Quellcode.
+ Sie bekommen intern IDs zugewiesen, über welche sie sich identifizieren
  und - entsprechend ihrem Programmfluss - beeinflussen können.
  Der Thread wird gemeinsam mit den Eingabedaten auf die Grafikkarte kopiert,
- wobei die Eingabedaten in den Shared Memory abgelegt werden.
+ wobei die Eingabedaten in den 
+\shape italic
+Shared Memory
+\shape default
+ abgelegt werden.
  Anschließend beginnen die SPs mit der Bearbeitung der Daten.
- Wenn alle Threads berechnet wurden - also im Normalfall jeder SP 2 Threads
- bearbeitet hat - werden die Ergebnisse aus dem Shared Memory zurück in
- den RAM kopiert und von dort über die CPU weiterverwendet.
+ Wenn alle Threads berechnet wurden - im Normalfall also jeder SP 2 Threads
+ bearbeitet hat - werden die Ergebnisse aus dem 
+\shape italic
+Shared Memory
+\shape default
+ zurück in den RAM kopiert und von dort über die CPU weiterverwendet.
  Im Anschluss ist der MP bereit für den nächsten Warp und das Ganze beginnt
  wieder von vorne.
  
@@ -854,8 +950,8 @@ Algorithmus im Detail
 Im diesem Kapitel wird der Ablauf des AES Algorithmus vorgestellt.
  Er besteht aus mehreren Phasen, auf die im Folgenden genauer eingegangen
  wird.
- Anzumerken sei, dass bei Beispielen der Einfachheit halber von einer 128
- Bit-Verschlüsselung ausgegangen wird.
+ Anzumerken ist, dass bei den Beispielen der Einfachheit halber von einer
+ 128 Bit-Verschlüsselung ausgegangen wird.
 \end_layout
 
 \begin_layout Standard
@@ -865,7 +961,15 @@ Jeder Block wird zunächst in eine zweidimensionale Tabelle mit vier Zeilen
  Anstatt jeden Block einmal mit dem Schlüssel zu verschlüsseln, wendet AES
  verschiedene Teile des erweiterten Originalschlüssels nacheinander auf
  den Klartext-Block an.
- Die Anzahl r dieser Runden variiert und ist von der Schlüssellänge k abhängig:
+ Die Anzahl 
+\shape italic
+r
+\shape default
+ dieser Runden variiert und ist von der Schlüssellänge 
+\shape italic
+k
+\shape default
+ abhängig:
 \end_layout
 
 \begin_layout Standard
@@ -888,7 +992,9 @@ status open
 \begin_inset Text
 
 \begin_layout Plain Layout
-Schlüssellänge k
+Schlüssellänge 
+\shape italic
+k
 \end_layout
 
 \end_inset
@@ -897,7 +1003,9 @@ Schlüssellänge k
 \begin_inset Text
 
 \begin_layout Plain Layout
-Runden r
+Runden 
+\shape italic
+r
 \end_layout
 
 \end_inset
@@ -1038,11 +1146,18 @@ Vor der ersten Chiffrierung muss zunächst einmal der Schlüssel entsprechend
 \end_layout
 
 \begin_layout Standard
-Der Benutzerschlüssel muss in r+1 Teilschlüssel aufgeteilt werden, die sogenannt
-en Rundenschlüssel.
- Diese müssen dieselbe Länge wie die Blöcke haben, was bedeutet, dass der
- Benutzerschlüssel zunächst auf die Länge k*(r+1) expandiert werden muss.
- Aus diesem werden die Rundenschlüssel erzeugt und ebenfalls in Tabellen
+Der Benutzerschlüssel muss in 
+\shape italic
+r+1
+\shape default
+ Teilschlüssel aufgeteilt werden, die sogenannten Rundenschlüssel.
+ Diese müssen dieselbe Länge wie die Blöcke besitzen.
+ Dies bedeutet, dass der Benutzerschlüssel zunächst auf die Länge 
+\shape italic
+k*(r+1)
+\shape default
+ expandiert werden muss.
+ Aus Diesem werden die Rundenschlüssel erzeugt und ebenfalls in Tabellen
  (Arrays) mit vier Spalten und vier Zeilen gespeichert.
  Für die Erzeugung der ersten Spalte des jeweils nächsten Rundenschlüssels
  wird zunächst die letzte Spalte des vorherigen Schlüssels, am Anfang also
@@ -1061,14 +1176,14 @@ Die Konstruktion der S-Box unterliegt Designkriterien, die die Anfälligkeit
  für algebraische Attacken minimieren sollen.
  Mit Hilfe der S-Box wird jedes Byte des Blocks durch ein Äquivalent ersetzt
  und die Daten somit monoalphabetisch verschlüsselt.
- Diese neuerzeugte Spalte wird mit der drei Spalten zurückliegenden Spalte
+ Diese neu erzeugte Spalte wird mit der drei Spalten zurückliegenden Spalte
  und mit der ersten Spalte der sogenannten Rcon-Tabelle XOR-verknüpft.
  
 \end_layout
 
 \begin_layout Standard
-Die Rcon-Tabelle ist ebenfalls in Form eines Arrays mit 4 Zeilen und einer
- Spalte für jeden Rundenschlüssel aufgebaut.
+Die Rcon-Tabelle ist ebenfalls in Form eines Arrays mit vier Zeilen und
+ einer Spalte für jeden Rundenschlüssel aufgebaut.
  Sie enthält konstante Werte, die auf einem mathematischen System beruhen.
  Die aus der XOR-Verknüpfung erzeugten Werte ergeben die erste Spalte des
  nächsten Rundenschlüssels.
@@ -1082,8 +1197,13 @@ Vorrunde
 \end_layout
 
 \begin_layout Standard
-Bei AddRoundKey erfolgt eine XOR-Verknüpfung zwischen dem zu verschlüsselnden
- Block und dem ersten Rundenschlüssel (siehe Abb.4).
+Bei 
+\shape italic
+AddRoundKey
+\shape default
+ erfolgt eine XOR-Verknüpfung zwischen dem zu verschlüsselnden Block und
+ dem ersten Rundenschlüssel (siehe Abb.
+ 6).
  Nur an dieser Stelle ist der Algorithmus vom Benutzerschlüssel abhängig.
 \end_layout
 
@@ -1138,12 +1258,15 @@ In den folgenden Verschlüsselungsrunden wird zunächst eine Substitution
 \end_layout
 
 \begin_layout Standard
-Im darauffolgenden Schritt, genannt ShiftRow, werden die Zeilen um eine
- bestimmte Anzahl von Spalten nach links verschoben und links hinausgeschobene
- Zellen rechts wieder angefügt.
- Die erste Zeile bleibt konstant, die zweite wird um eine, die dritte um
- zwei und die vierte um drei Spalten verschoben.
- Abbildung 5 veranschaulicht dieses Vorgehen.
+Im darauffolgenden Schritt (
+\shape italic
+ShiftRow
+\shape default
+) werden die Zeilen um eine bestimmte Anzahl von Spalten nach links verschoben
+ und links hinausgeschobene Zellen rechts wieder angefügt.
+ Die erste Zeile bleibt konstant, die Zweite wird um eine, die Dritte um
+ zwei und die Vierte um drei Spalten verschoben.
+ Abbildung 7 veranschaulicht dieses Vorgehen.
  
 \end_layout
 
@@ -1184,8 +1307,12 @@ ShiftRow
 \end_layout
 
 \begin_layout Standard
-Im MixColumn-Schritt wird zunächst jede Zelle mit einer Konstanten multipliziert
- und dann die Spalten mit den Ergebnissen der Multiplikation XOR verknüpft.
+Im 
+\shape italic
+MixColumn
+\shape default
+-Schritt wird zunächst jede Zelle mit einer Konstanten multipliziert und
+ dann die Spalten mit den Ergebnissen der Multiplikation XOR verknüpft.
  Durch eine geschickte Analyse dieser Operation, vereinfacht sich die Rechnung
  zu einer simplen Matrizenmultiplikation.
 \end_layout
@@ -1231,10 +1358,18 @@ MixColumn
 \end_layout
 
 \begin_layout Standard
-Zum Ende jeder Verschlüsselungsrunde wird noch einmal AddRoundKey ausgeführt.
- Abgeschlossen wird die Verschlüsselung mit der Schlussrunde, sie verläuft
- identisch zu den übrigen Verschlüsselungsrunden mit dem Unterschied, dass
- keine MixColumn-Funktion ausgeführt wird.
+Am Ende jeder Verschlüsselungsrunde wird noch einmal 
+\shape italic
+AddRoundKey
+\shape default
+ ausgeführt.
+ Abgeschlossen wird die Verschlüsselung mit der Schlussrunde.
+ Sie verläuft identisch zu den übrigen Verschlüsselungsrunden, mit dem Unterschi
+ed, dass keine 
+\shape italic
+MixColumn
+\shape default
+-Funktion ausgeführt wird.
 \end_layout
 
 \begin_layout Subsubsection
@@ -1275,8 +1410,9 @@ Verweis!!!
 
 .
  Der Autor hat bereits erste Ansätze zur Datenverschlüsselung auf einer
- GPU programmiert, hat das Projekt jedoch aus unbekannten Gründen eingestellt,
- sodass noch einige Ergänzungen und Änderungen vorgenommen werden müssen.
+ GPU programmiert.
+ Er hat das Projekt jedoch aus unbekannten Gründen eingestellt, sodass noch
+ einige Ergänzungen und Änderungen vorgenommen werden müssen.
 \end_layout
 
 \begin_layout Standard
@@ -1286,19 +1422,15 @@ Die Implementierung ist Dank der Ausnutzung komplexerer Galois-Feld-Operationen
  auf Kosten der Speichereffizienz beschleunigt.
  Der Aufwand der Verschlüsselung verringert sich somit auf eine Reihe (schneller
 ) Binäroperationen, welche sich auf der GPU vorteilhaft parallel ausführen
- lassen können.
+ lassen.
 \end_layout
 
 \begin_layout Standard
 Zusätzlich ist anzumerken, dass zugunsten der Parallelität der sogenannte
  
-\begin_inset Quotes eld
-\end_inset
-
+\shape italic
 Electronic Code Book Mode
-\begin_inset Quotes erd
-\end_inset
-
+\shape default
  (ECB) verwendet wird, also jeder Block mit dem gleichen expandierten Schlüssel
  chiffriert wird.
 \end_layout
@@ -1309,7 +1441,7 @@ Schnittstelle zur Außenwelt
 
 \begin_layout Standard
 Um von außen auf die Verschlüsselungsfunktionen zugreifen zu können, enthält
- die genutzte AES-Klasse neben dem Konstruktur 
+ die genutzte AES-Klasse neben dem Konstruktur auch 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1572,10 +1704,10 @@ void AES::encrypt(const uint *pt, uint *ct, uint n = 1) {
 \end_layout
 
 \begin_layout Standard
-Das Programm ermittelt also in den Zeilen 20 bis 25 die benötigten Parameter
- zur optimalen Aufteilung de Arbeitslast, erstellt Grids und Blöcke in entsprech
-ender Dimensionierung und stößt den Kernel-Service für jeden einzelnen der
- Threads an.
+Das Programm ermittelt in den Zeilen 20 bis 25 die benötigten Parameter
+ zur optimalen Aufteilung der Arbeitslast, erstellt Grids und Blöcke in
+ entsprechender Dimensionierung und stößt den Kernel-Service für jeden einzelnen
+ der Threads an.
 \end_layout
 
 \begin_layout Subsubsection
@@ -1715,8 +1847,8 @@ __global__ void AES_encrypt(const uint *pt, uint *ct, uint *rek, uint Nr)
 \end_layout
 
 \begin_layout Standard
-Der threadspezifische Offset zur Speicheradressierung berechnet sich wie
- in Kapitel 2.1 beschrieben aus der 
+Der threadspezifische Offset zur Speicheradressierung berechnet sich, wie
+ in Kapitel 2.1 beschrieben, aus der 
 \shape italic
 blockId
 \shape default
@@ -1780,17 +1912,9 @@ CUDA Profiler
 
 .
  Dieses grafische Tool erlaubt einen detaillierten Einblick in die Laufzeiten
- einzelner CUDA-Befehle und eignet sich somit zur Bewertung derer Geschwindigkei
+ einzelner CUDA-Befehle und eignet sich somit zur Bewertung ihrer Geschwindigkei
 t.
- Auch können damit eventuelle 
-\begin_inset Quotes eld
-\end_inset
-
-Flaschenhälse
-\begin_inset Quotes erd
-\end_inset
-
- im Code aufgespürt und ggf.
+ Auch können damit eventuelle Bottlenecks im Code aufgespürt und ggf.
  korrigiert werden.
 \end_layout
 
