@@ -1,4 +1,4 @@
-#LyX 1.6.6.1 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.7 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -785,7 +785,7 @@ Im Folgenden ein kleines Beispiel zur Veranschaulichung:
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\normalsize\ttfamily},language={C++}"
+lstparams "basicstyle={\normalsize\ttfamily},language={C++},numbers=left"
 inline false
 status open
 
@@ -933,9 +933,7 @@ Shared Memory
 Shared Memory
 \shape default
  zurück in den RAM kopiert und von dort über die CPU weiterverwendet.
- Im Anschluss ist der MP bereit für den nächsten Warp und das Ganze beginnt
- wieder von vorne.
- 
+ Im Anschluss ist der MP bereit für den nächsten Warp.
 \end_layout
 
 \begin_layout Section
@@ -1399,11 +1397,22 @@ Ausgangspunkt der weiteren Bearbeitung ist eine unfertige C++ Implementierung
  L.
  M.
  Barreto
-\begin_inset Note Note
+\begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-Verweis!!!
+Zu finden unter 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://github.com/cbguder/aes-on-cuda
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -1902,19 +1911,11 @@ Zur Evaluierung der Korrektheit der entwickelten Lösung, werden zunächst
 
 \begin_layout Standard
 Um die Performance zu beurteilen und relevante Laufzeitanalysen durchzuführen,
- bietet NVIDIA als Teil des CUDA-SDKs den sogenannten 
-\begin_inset Quotes eld
-\end_inset
-
-CUDA Profiler
-\begin_inset Quotes erd
-\end_inset
-
-.
+ bietet NVIDIA als Teil des CUDA-SDKs den sogenannten “CUDA Profiler”.
  Dieses grafische Tool erlaubt einen detaillierten Einblick in die Laufzeiten
- einzelner CUDA-Befehle und eignet sich somit zur Bewertung ihrer Geschwindigkei
+ einzelner CUDA-Befehle und eignet sich somit zur Bewertung derer Geschwindigkei
 t.
- Auch können damit eventuelle Bottlenecks im Code aufgespürt und ggf.
+ Auch können damit eventuelle “Flaschenhälse” im Code aufgespürt und ggf.
  korrigiert werden.
 \end_layout
 
@@ -1928,17 +1929,218 @@ Da die folgenden Tests möglichst unabhängig von der restlichen Hardware
  entschlüsselt.
 \end_layout
 
+\begin_layout Standard
+Anzumerken sei an dieser Stelle, dass die Benchmarks nur eine geringe Aussagekra
+ft besitzen ob ihrer Oberflächlichkeit.
+ Ziel ist nicht die verlässliche Erfassung der Geschwindigkeit, sondern
+ ein grober Überblick, um einen Vergleich mit der in Linux implementierten
+ CPU-Lösung zu ermöglichen.
+ Detaillierte Analysen sind zwar auch Teil des Softwareprojektes, werden
+ aber an anderer Stelle ausführlich bearbeitet.
+\end_layout
+
 \begin_layout Subsection
 Ergebnisse
 \end_layout
 
-\begin_layout Section
-Resumée
-\begin_inset Note Note
+\begin_layout Standard
+Zum Zeitpunkt der Tests wurde nach Aussagen der Gruppe rund um das Linux-Kernelm
+odul eine Klartextlänge von 8 KByte angenommen.
+ Diese Datengröße wurde schließlich für alle Tests benutzt, um möglichst
+ realistische Werte für die Modulimplementierung zu erhalten.
+\end_layout
+
+\begin_layout Standard
+Als durchschnittliche Datendurchsatzrate nach 100.000 Paketen je 8 KByte
+ konnte für die GPU-Implementierung ein Wert von 13,47 MB/s ermittelt werden.
+ Im Vergleich dazu erreicht die reine CPU-Berechnung eine Geschwindigkeit
+ von 66,21 MB/s.
+\end_layout
+
+\begin_layout Standard
+Eine Ausführung mit dem CUDA-Profiler hat ergeben, dass ein Großteil der
+ Zeit (87.43 %) tatsächlich für die reine Ausführung des Verschlüsselungsalgorith
+mus' verwendet wird, also die Kopiervorgänge keinen überufernden Einfluss
+ auf die Laufzeit haben.
+ Hervorzuheben ist jedoch, dass das Kopieren der Daten von der Grafikkarte
+ in den RAM erheblich länger dauert als der umgekehrte Fall, da die Daten
+ nach der Verschlüsselung stärker fragmentiert vorliegen und nicht mehr
+ in einem großen zusammenhängenden Block zurückkopiert werden können.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-?
+\noindent
+\align center
+\begin_inset Graphics
+	filename img/cudap_plot.jpg
+	width 90text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Plotausgabe des CUDA-Profilers
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Aufgrund der geringen Größe der Klartextblöcke, welche die Crypto-API von
+ Linux jeweils zum Verschlüsseln herausgibt, scheint die GPU-Implementierung
+ keine Performanceverbesserung zu bieten.
+ Im Gegenteil - der anfallende Overhead bremst das System unnötig aus.
+ Vorteile könnten erst ab einer Größe von mehreren Megabyte pro Paket gezogen
+ werden, in diesen Maßstäben scheint der Algorithmus mit wachsender Datengröße
+ exponentiell schneller zu werden.
+ Da sich dies leider mit der vorliegenden Crypto-API nicht vereinbaren lässt,
+ bleibt die GPU-Implementierung hinter den Ergebnissen der CPU zurück und
+ ist für den Praxiseinsatz nicht anzuraten.
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+\start_of_appendix
+Quellenverzeichnis
+\end_layout
+
+\begin_layout Standard
+Genutzt wurden folgende Quellen, jedoch gänzlich ohne Zitate:
+\end_layout
+
+\begin_layout Itemize
+Ausführliche Erklärung der Funktionsweise von AES: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://www.codeplanet.eu/tutorials/cpp/51-advanced-encryption-standard.html
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Quelltext einer AES-Implementierung von Paulo S.
+ L.
+ M.
+ Barreto: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://github.com/cbguder/aes-on-cuda
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+CUDA 3.2 Reference Manual: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://developer.nvidia.com/object/cuda_3_2_downloads.html
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+Programming Massively Parallel Processors - GPU CUDA
+\begin_inset Quotes erd
+\end_inset
+
+ von David Kirk (NVIDIA) und Wen-mei Hwu: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://www.scribd.com/doc/37997106/Programming-Massively-Parallel-Processors-GPU-C
+UDA
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Vorstellungsfolien über die CUDA-SDK in Verbindung mit der GeForce 8800:
+ 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://www.gpgpu.org/static/sc2006/workshop/presentations/Buck_NVIDIA_Cuda.pdf
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Vorstellungsfolien eines Vortrages von NVIDIA über Cuda auf der NVISION
+ 2008: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://www.nvidia.com/content/cudazone/download/Getting_Started_w_CUDA_Training_NV
+ISION08.pdf
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Technival Brief der NVIDIA GeForce 8800 GPU: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://www.nvidia.com/object/IO_37100.html
 \end_layout
 
 \end_inset
